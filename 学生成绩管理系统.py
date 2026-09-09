@@ -20,7 +20,11 @@ while True:
         continue
     elif gongneng == "2":
         fenshu = input("请输入分数")
-        chengji.append(float(fenshu))
+        try:
+            chengji.append(float(fenshu))
+        except ValueError:
+            print("请输入数字！")
+            continue
         print("*****添加成功*****")
         continue
     elif gongneng == "3":
