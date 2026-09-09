@@ -1,14 +1,13 @@
-print("简单小任务")
-import random
-num = random.randint(1,100)
-print(num)
-while True:
-    try:
-        nums = int(input("请输入生成的随机阿拉伯数字到对话框中"))
-        if nums == num:
-            print(f"你输入的是{nums},很好已经完成任务了")
-        else:
-            print("请输入正确的随机数字哦")
-    except ValueError:
-        print("输入错误，注意！！我要的是数字")
-
+print("简单小任务")  # 打印提示信息
+import random  # 导入 random 模块，用于生成随机数
+num = random.randint(1,100)  # 随机生成一个 1～100（含两端）之间的整数
+print(num)  # 打印这个随机数，方便用户对照
+while True:  # 无限循环，直到用户输对才退出
+    try:  # 尝试执行可能出错的代码
+        nums = int(input("请输入生成的随机阿拉伯数字到对话框中"))  # 接收输入并转成整数
+        if nums == num:  # 如果输入的数字等于随机数
+            print(f"你输入的是{nums},很好已经完成任务了")  # 用 f-string 提示已经完成
+        else:  # 否则输入的数字不对
+            print("请输入正确的随机数字哦")  # 提示输入正确的数字
+    except ValueError:  # 若输入的不是整数（例如字母），捕获 ValueError
+        print("输入错误，注意！！我要的是数字")  # 提示必须输入数字

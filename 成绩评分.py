@@ -1,16 +1,15 @@
-score = input("请输入你的分数")
-score = int(score)
+score = input("请输入你的分数")  # 提示用户输入分数，先以字符串形式保存
+score = int(score)  # 把输入的字符串转成整数
 
-if 0 <= score < 60:
-    print("傻子，你的是鸭蛋")
-elif 60 <= score < 80:
-    print("C")
-elif 80 <= score < 90:
-    print("B")
-elif 90 <= score < 100:
-    print("A")
-elif 100 <= score < 120:
-    print("SSS")
-else:
-    print("请输入0～120")
-    
+if 0 <= score < 60:  # 分数在 0（含 0）到 60（不含 60）之间
+    print("傻子，你的是鸭蛋")  # 输出鸭蛋等级提示
+elif 60 <= score < 80:  # 分数在 60（含）到 80（不含）之间
+    print("C")  # 输出等级 C
+elif 80 <= score < 90:  # 分数在 80（含）到 90（不含）之间
+    print("B")  # 输出等级 B
+elif 90 <= score < 100:  # 分数在 90（含）到 100（不含）之间
+    print("A")  # 输出等级 A
+elif 100 <= score < 120:  # 分数在 100（含）到 120（不含）之间
+    print("SSS")  # 输出等级 SSS
+else:  # 以上条件都不满足
+    print("请输入0～120")  # 提示用户输入 0～120 之间的分数

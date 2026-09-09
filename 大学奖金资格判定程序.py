@@ -1,13 +1,11 @@
-print("****************")
-print("大学奖金资格判定程序")
-name = input("姓名:")
-pg = float(input("平均成绩:"))
-eg = float(input("英语成绩:"))
-sj = input("是否挂科:")
-has_sj = sj in ("yes","Y","是","YES","y")
-if pg >= 85 and eg >= 70 and not has_sj:
-    print("符合基本奖金申请条件")
-else:
-    print("暂时不符合基本奖金申请条件")
-          
-
+print("****************")  # 打印一排星号作为程序顶部分隔线
+print("大学奖金资格判定程序")  # 打印程序标题
+name = input("姓名:")  # 提示用户输入姓名，保存到变量 name
+pg = float(input("平均成绩:"))  # 提示输入平均成绩并把字符串转成浮点数，保存到 pg
+eg = float(input("英语成绩:"))  # 提示输入英语成绩并把字符串转成浮点数，保存到 eg
+sj = input("是否挂科:")  # 提示输入是否挂科
+has_sj = sj in ("yes","Y","是","YES","y")  # 判断输入内容是否属于挂科关键词，得到 True 或 False
+if pg >= 85 and eg >= 70 and not has_sj:  # 平均分≥85 且英语≥70 且没有挂科时进入
+    print("符合基本奖金申请条件")  # 满足条件时打印“符合”
+else:  # 否则不满足上述条件
+    print("暂时不符合基本奖金申请条件")  # 打印“暂时不符合”

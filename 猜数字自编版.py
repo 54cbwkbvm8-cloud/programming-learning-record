@@ -1,13 +1,13 @@
-target = 37
-count = 0
-guess = float(input("请输入你的猜测："))
-count = count + 1
-while guess != target:
-    if guess > target:
-        print("猜大了")
-    else:
-        guess < target
-        print("猜小了")
-    guess = float(input("请输入你的猜测："))
-print("猜对了")
-print(f"你一共猜了 {count} 次")
+target = 37  # 设定要猜的目标数字为 37
+count = 0  # 初始化猜测次数的计数器为 0
+guess = float(input("请输入你的猜测："))  # 提示并接收用户第一次输入，转成浮点数作为猜测值
+count = count + 1  # 每猜一次就把计数器加 1
+while guess != target:  # 只要猜的数字和目标数字不相等，就一直循环
+    if guess > target:  # 如果猜的数字比目标数字大
+        print("猜大了")  # 提示用户猜大了
+    else:  # 否则说明猜的数字比目标数字小
+        guess < target  # （原有代码）这只是一个比较表达式，没有实际作用
+        print("猜小了")  # 提示用户猜小了
+    guess = float(input("请输入你的猜测："))  # 再次提示输入新的猜测值，进入下一次判断
+print("猜对了")  # 循环结束说明已经猜中，打印提示
+print(f"你一共猜了 {count} 次")  # 用 f-string 打印总共猜测的次数

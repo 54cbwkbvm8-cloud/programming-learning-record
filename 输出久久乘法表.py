@@ -7,7 +7,7 @@
 #   - end="  " 表示这一句打印完不换行，只加两个空格
 #   - 内层循环结束后 print() 负责换行
 
-for i in range(1, 10):
-    for j in range(1, i + 1):
-        print(f"{j} x {i} = {i * j}", end="  ")
-    print()
+for i in range(1, 10):  # 外层循环，i 代表行号，范围是 1 到 9
+    for j in range(1, i + 1):  # 内层循环，j 代表列号，从 1 到当前行号 i
+        print(f"{j} x {i} = {i * j}", end="  ")  # 打印乘法算式，end="  " 表示本次打印不换行，只加两个空格
+    print()  # 打印完一行乘法后换行

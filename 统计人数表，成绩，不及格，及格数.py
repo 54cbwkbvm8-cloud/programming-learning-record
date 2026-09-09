@@ -1,28 +1,26 @@
-scores = [85,92,76,63,90,56,48]
-print("所有成绩:",scores)
-alls = sum(scores)
-print("总成绩:",alls)
-c = len(scores)
-print("平均数:",alls/c)
-m = max(scores)
-print("最大值:",m)
-mins = min(scores)
-print("最小值:",mins)
-scores = [85,92,76,63,90,56,48]
-num = 0
-mun = 0
-a = []
-b = []
-for score in scores:
-    if score < 60:
-        a.append(score)
-        num = num + 1
-    else:
-        b.append(score)
-        mun = mun + 1
-print("及格人数:",mun)
-print("不及格人数:",num)
-print("不及格:",a)
-print("及格:",b)
-                
-                
+scores = [85,92,76,63,90,56,48]  # 定义一个成绩列表
+print("所有成绩:",scores)  # 打印整个成绩列表
+alls = sum(scores)  # 用 sum 计算总成绩
+print("总成绩:",alls)  # 打印总成绩
+c = len(scores)  # 用 len 获取成绩个数
+print("平均数:",alls/c)  # 总成绩除以个数得到平均数
+m = max(scores)  # 用 max 求最大值
+print("最大值:",m)  # 打印最大值
+mins = min(scores)  # 用 min 求最小值
+print("最小值:",mins)  # 打印最小值
+scores = [85,92,76,63,90,56,48]  # 重新定义一个相同成绩列表，用于后续统计
+num = 0  # 不及格人数计数器
+mun = 0  # 及格人数计数器
+a = []  # 存放不及格成绩的空列表
+b = []  # 存放及格成绩的空列表
+for score in scores:  # 遍历每一个成绩
+    if score < 60:  # 成绩小于 60 认为不及格
+        a.append(score)  # 把该成绩放入不及格列表
+        num = num + 1  # 不及格人数加 1
+    else:  # 否则成绩及格
+        b.append(score)  # 把该成绩放入及格列表
+        mun = mun + 1  # 及格人数加 1
+print("及格人数:",mun)  # 打印及格人数
+print("不及格人数:",num)  # 打印不及格人数
+print("不及格:",a)  # 打印不及格成绩列表
+print("及格:",b)  # 打印及格成绩列表

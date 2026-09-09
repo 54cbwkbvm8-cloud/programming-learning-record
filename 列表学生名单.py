@@ -1,9 +1,9 @@
-students = ["小明","小白","小帅"]
-print("新增\"蔡徐坤\"同学")
-students.append("蔡徐坤")
-print("剔除\"小明\"同学")
-students.remove("小明")
-e = students[1]
-a = len(students)
-print("学生人数:",a,"人")
-print("二号学生:",e,"同学")
+students = ["小明","小白","小帅"]  # 定义一个列表，存放三位学生的名字
+print("新增\"蔡徐坤\"同学")  # 打印提示信息，表示将要新增一位同学
+students.append("蔡徐坤")  # 使用 append 方法往列表末尾添加“蔡徐坤”
+print("剔除\"小明\"同学")  # 打印提示信息，表示将要移除“小明”
+students.remove("小明")  # 使用 remove 方法从列表中删除“小明”
+e = students[1]  # 取出列表第二个元素（下标为1），保存到变量 e
+a = len(students)  # 使用 len 获取列表长度（学生人数），保存到变量 a
+print("学生人数:",a,"人")  # 打印当前学生人数
+print("二号学生:",e,"同学")  # 打印排在第二位的学生姓名
