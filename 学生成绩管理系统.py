@@ -1,55 +1,130 @@
-print("="*82)  # 打印 82 个等号，形成程序顶部边框
-print("-"*30,"欢迎使用学生成绩管理系统","-"*30)  # 两侧各打印 30 个减号，中间是欢迎标语
-print("="*82)  # 打印 82 个等号，形成程序底部边框
-xuesheng = []  # 空列表，用于存放学生姓名
-chengji = []  # 空列表，用于存放学生成绩
-while True:  # 无限循环，持续提供菜单直到用户选择退出
-    print("请选择程序:")  # 打印菜单提示
-    print("1-添加学生")  # 菜单项 1：添加学生
-    print("2-添加成绩")  # 菜单项 2：添加成绩
-    print("3-查看学生")  # 菜单项 3：查看学生
-    print("4-查看成绩")  # 菜单项 4：查看成绩
-    print("5-计算平均分")  # 菜单项 5：计算平均分
-    print("6-判断是否及格")  # 菜单项 6：判断是否及格
-    print("7-退出程序")  # 菜单项 7：退出程序
-    gongneng = input()  # 接收用户输入的功能编号
-    if gongneng == "1":  # 选择 1：添加学生
-        name = input("请输入学生姓名")  # 输入学生姓名
-        xuesheng.append(name)  # 把姓名加入学生列表
-        print("*****添加成功*****")  # 打印添加成功提示
-        continue  # 回到菜单继续操作
-    elif gongneng == "2":  # 选择 2：添加成绩
-        fenshu = input("请输入分数")  # 输入分数
-        try:  # 尝试把字符串转成浮点数
-            chengji.append(float(fenshu))  # 转换成功则加入成绩列表
-        except ValueError:  # 若输入的不是数字，捕获异常
-            print("请输入数字！")  # 提示必须输入数字
-            continue  # 回到菜单继续
-        print("*****添加成功*****")  # 打印添加成功提示
-        continue  # 回到菜单继续
-    elif gongneng == "3":  # 选择 3：查看学生
-        print(xuesheng)  # 打印学生姓名列表
-        continue  # 回到菜单继续
-    elif gongneng == "4":  # 选择 4：查看成绩
-        # 用循环变量 xueshengs/chengjis，而不是上一个残留下来的 name/fenshu
-        for xueshengs, chengjis in zip(xuesheng, chengji):  # 把学生姓名和成绩一一配对遍历
-            print("姓名:", xueshengs, "成绩:", chengjis, "分")  # 打印每对学生姓名和成绩
-    elif gongneng == "5":  # 选择 5：计算平均分
-        # 用 len(chengji) 判断有没有成绩，而不是 sum(chengji) == 0
-        if len(chengji) == 0:  # 成绩列表为空说明还没有任何成绩
-            print("当前没有任何成绩信息，请添加成绩后再尝试")  # 提示先添加成绩
-        else:  # 有成绩存在
-            # 除以成绩个数，而不是姓名个数
-            total = sum(chengji) / len(chengji)  # 总成绩除以成绩个数得到平均分
-            print("平均分:", total)  # 打印平均分
-    elif gongneng == "6":  # 选择 6：判断是否及格
-        for name, fenshu in zip(xuesheng, chengji):  # 配对遍历姓名和成绩
-            if fenshu < 60:  # 成绩小于 60 判定为不及格
-                print("姓名:", name, "不及格")  # 打印不及格结果
-            else:  # 否则判定为及格
-                print("姓名:", name, "及格")  # 打印及格结果
-    elif gongneng == "7":  # 选择 7：退出程序
-        print("再见！欢迎下次使用Python学生信息登记系统")  # 打印再见语
-        break  # 跳出 while 循环，程序结束
-    else:  # 输入的不是 1~7 的数字
-        print("编号不正确，请输入 1~7 的数字。")  # 提示编号不正确
+import json
+from pathlib import Path
+DATA_FILE = Path(__file__).with_name("students.json")
+def save_data():
+    data = {
+        "students": xuesheng
+    }
+    with DATA_FILE.open("w", encoding="utf-8") as f:
+        json.dump(data,f,ensure_ascii=False, indent=2)
+def load_data():
+    if not DATA_FILE.exists():
+        return []
+    with DATA_FILE.open("r",encoding="utf-8") as f:
+        data = json.load(f)
+        return data.get("students", [])
+xuesheng = load_data()
+print("="*82)
+print("-"*30,"欢迎使用学生成绩管理系统","-"*30)
+print("="*82)
+while True:
+    print("请选择程序:")
+    print("1-添加学生")
+    print("2-删除学生")
+    print("3-修改学生")
+    print("4-查看学生")
+    print("5-保存JSON数据")
+    print("6-退出程序")
+    gongneng = input().strip()
+    if gongneng == "1":
+        name = input("请输入学生姓名").strip()
+        if name == "":
+            print("学生姓名不能为空，请重新输入。")
+            continue
+        yijing_cunzai = False
+        for student in xuesheng:
+            if student.get("name") == name:
+                yijing_cunzai = True
+                break
+        if yijing_cunzai:
+            print("该学生已存在，无法重复添加。")
+            continue
+        fenshu_text = input("请输入学生成绩").strip()
+        try:
+            fenshu = float(fenshu_text)
+            if fenshu.is_integer():
+                fenshu = int(fenshu)
+        except ValueError:
+            print("成绩必须是数字，例如:88.5或者 77.0，请重新输入。")
+            continue
+        
+        xuesheng.append({"name": name, "score": fenshu})
+        save_data()
+        print("*****添加成功*****")
+        continue
+    elif gongneng == "2":
+        name = input("请输入要删除的学生姓名").strip()
+        yijing_shanchu = False
+        for student in xuesheng:
+            if student.get("name") == name:
+                xuesheng.remove(student)
+                yijing_shanchu = True
+                break
+        if yijing_shanchu:
+            save_data()
+            print("删除成功！")
+        else:
+            print("未找到该学生，请检查姓名是否正确,无法删除。")
+        continue
+    elif gongneng == "3":
+        name = input("请输入要修改的学生姓名").strip()
+        target = None
+        for student in xuesheng:
+            if student.get("name") == name:
+                target = student
+                break
+        if target is None:
+            print("未找到该学生,暂时无法修改。")
+            continue
+        new_name = input("请输入新的学生姓名(直接回车表示不修改内容):").strip()
+        gai_guo = False
+        if new_name != "":
+            chongfu = False
+            for student in xuesheng:
+                if student is not target and student.get("name") == new_name:
+                    chongfu = True
+                    break
+            if chongfu:
+                print("该学生已存在，没有姓名可以修改。")
+            else:
+                target["name"] = new_name
+                gai_guo = True
+        new_score_text = input("请输入新的学生成绩(直接回车表示不修改内容):").strip()
+        if new_score_text != "":
+            try:
+                new_score = float(new_score_text)
+                if new_score.is_integer():
+                    new_score = int(new_score)
+            except ValueError:
+                print("新成绩必须是数字，成绩没有被修改。")
+            else:
+                target["score"] = new_score
+                gai_guo = True
+        if gai_guo:
+            save_data()
+            print("******修改成功！******")
+        else:
+            print("本次没有修改任何内容。")
+        continue
+    elif gongneng == "4":
+        chaxun_name = input("请输入要查询的学生姓名").strip()
+        zhaodao = False
+        for student in xuesheng:
+            name = student.get("name","")
+            if chaxun_name == "" or chaxun_name in name:
+                fenshu = student.get("score", "暂无数据")
+                print("姓名:", name, "成绩:", fenshu, "分")
+                zhaodao = True
+        if not zhaodao:
+            print("未找到符合条件的学生。")
+        continue
+    elif gongneng == "5":
+        save_data()
+        print("*****保存成功*****")
+        continue
+    elif gongneng == "6":
+        save_data()
+        print("再见！欢迎下次使用Python学生信息登记系统")
+        break
+    else:
+        print("编号不正确，请输入 1~6 的数字。")
