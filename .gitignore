@@ -1,0 +1,18 @@
+# macOS 系统文件
+.DS_Store
+
+# Python 缓存与编译文件
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 虚拟环境
+.venv/
+venv/
+
+# 学生成绩管理系统生成的本地数据
+students.json
+
+# 常见编辑器目录
+.idea/
+.vscode/

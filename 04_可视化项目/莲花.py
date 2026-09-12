@@ -1,3 +1,12 @@
+"""
+简介：使用 NumPy 和 Matplotlib 绘制旋转的 3D 莲花动画。
+功能：
+- 参数化生成多层、多片弯曲花瓣网格。
+- 绘制花蕊、雄蕊和花瓣内闪烁微粒。
+- 通过 FuncAnimation 让视角旋转并更新粒子大小与颜色。
+用途：综合练习数组运算、三维曲面、颜色插值和动画帧更新。
+最后修改：2026-09-09
+"""
 import numpy as np  # 导入 numpy 库，用于数组和数学运算
 import matplotlib.pyplot as plt  # 导入 matplotlib 的绘图模块，用于画 2D/3D 图形
 from mpl_toolkits.mplot3d import Axes3D  # 导入 3D 坐标轴工具，支持三维绘图

@@ -1,3 +1,12 @@
+"""
+简介：带 JSON 持久化功能的学生成绩管理系统。
+功能：
+- 添加、删除、修改和查询学生及成绩。
+- 校验姓名重复、空姓名和非法成绩。
+- 使用 students.json 保存数据并在启动时自动加载。
+用途：综合练习函数、列表、字典、文件读写、JSON 和 Path。
+最后修改：2026-09-11
+"""
 import json
 from pathlib import Path
 DATA_FILE = Path(__file__).with_name("students.json")
