@@ -1,4 +1,4 @@
-# Python Learning
+# Python and c语言 Learning
 
 这是我的编程学习仓库，记录 Python 基础语法、流程控制、综合项目和 C 语言入门练习。仓库中的中文文件名保持不变，程序按照学习阶段和用途分类。
 
