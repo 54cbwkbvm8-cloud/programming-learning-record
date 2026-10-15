@@ -18,7 +18,7 @@ int main(void) {
     int i = 0;
     max = arr[0];
     for (i = 1; i < 10; i++) {
-        if (arr[i] > arr[0]) {
+        if (arr[i] > max) {
             max = arr[i];
         }
     }
@@ -26,7 +26,7 @@ int main(void) {
     printf("最大值是：%d\n", max);
     min = arr[0];
     for (i = 1; i < 10; i++) {
-        if (arr[i] < arr[0]) {
+        if (arr[i] < min) {
             min = arr[i];
         }
     }
