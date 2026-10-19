@@ -22,7 +22,7 @@
 编译运行（这份程序需要**两次输入**：先一个整数，再一个字符，中间用回车分开）：
 
 ```bash
-cc -std=c17 -Wall -Wextra "06_C语言练习/25_2026-10-16_switch分支与scanf输入练习.c" -o /tmp/practice && /tmp/practice
+cc -std=c17 -Wall -Wextra "C/04_分支与循环/25_2026-10-16_switch分支与scanf输入练习.c" -o /tmp/practice && /tmp/practice
 ```
 
 先输入 `2`，再输入 `B`，实测输出：

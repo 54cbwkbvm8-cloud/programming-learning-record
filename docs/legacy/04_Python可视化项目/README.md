@@ -1,5 +1,7 @@
 # 04 Python 可视化项目
 
+> **历史归档：** 本文件保留迁移前的阶段说明，不作为当前导航。当前入口见 [仓库首页](../../../README.md)，历史归档索引见 [legacy](../README.md)。
+
 本目录收录需要第三方库的**可视化程序**。目前只有一个文件，但它是整个仓库里最"好看"的一个，也是第一次接触 NumPy 和 Matplotlib。
 
 ## 文件一览
@@ -36,7 +38,7 @@ python3 -m pip install -r requirements.txt
 然后运行：
 
 ```bash
-python3 "04_Python可视化项目/01_2026-09-09_3D莲花动画.py"
+python3 "Python/14_可视化项目/01_2026-09-09_3D莲花动画.py"
 ```
 
 如果弹出的是空白窗口或者报错 `ModuleNotFoundError`，说明依赖没装上，回到上面两步重新安装即可。
