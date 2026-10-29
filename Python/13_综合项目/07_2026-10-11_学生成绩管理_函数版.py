@@ -7,53 +7,108 @@
 用途：练习函数拆分、列表与字典组合、while 循环和成绩等级判断。
 最后修改：2026-10-10
 """
+# 文件用途：本文件围绕“学生成绩管理 函数版”展开。
+# 核心知识点：列表与字典、函数、循环、分支判断。
+# 基本流程：根据代码中的输入或初始数据，按条件、循环和函数调用完成处理，再输出结果。
+# 输入：从标准输入读取数据或由调用者传入参数。输出：通过控制台打印处理结果。
+# 阅读提醒：注释用于解释当前代码的实际行为；若示例输入范围有限，扩展使用前应自行验证边界情况。
+# 定义函数 `get_level`，用于根据分数或数据返回对应等级；参数包括 score，函数体负责具体处理，调用处应关注传入参数和返回值。
 def get_level(score):
+    # 判断条件 `score >= 90`；条件为真时执行 if 分支，否则按后续 elif/else 分支处理。
     if score >= 90:
+        # 返回字符串 `A`，调用方可以把它保存到变量或继续用于判断。
         return 'A'
+    # 判断条件 `score >= 80`；条件为真时执行 if 分支，否则按后续 elif/else 分支处理。
     elif score >= 80:
+        # 返回字符串 `B`，调用方可以把它保存到变量或继续用于判断。
         return 'B'
+    # 判断条件 `score >= 70`；条件为真时执行 if 分支，否则按后续 elif/else 分支处理。
     elif score >= 70:
+        # 返回字符串 `C`，调用方可以把它保存到变量或继续用于判断。
         return 'C'
+    # 判断条件 `score >= 60`；条件为真时执行 if 分支，否则按后续 elif/else 分支处理。
     elif score >= 60:
+        # 返回字符串 `D`，调用方可以把它保存到变量或继续用于判断。
         return 'D'
+    # 当前条件分支的前置条件均未成立时，执行这个 else 代码块。
     else:
+        # 返回字符串 `E`，调用方可以把它保存到变量或继续用于判断。
         return 'E'
+# 定义函数 `show_students`；参数包括 students，函数体负责具体处理，调用处应关注传入参数和返回值。
 def show_students(students):
+    # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
     print("----学生成绩列表----")
+    # 依次取出 `students` 列表中的每个学生记录，并暂时用 `student` 指向当前记录。
     for student in students:
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("姓名：",student['name'])
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("分数：", student['score'])
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("等级：",get_level(student['score']))
+# 定义函数 `show_summary`，用于计算总和或平均值；参数包括 students，函数体负责具体处理，调用处应关注传入参数和返回值。
 def show_summary(students):
+    # 判断条件 `len(students) == 0`；条件为真时执行 if 分支，否则按后续 elif/else 分支处理。
     if len(students) == 0:
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("没有录入学生，无法统计成绩。")
+    # 当前条件分支的前置条件均未成立时，执行这个 else 代码块。
     else:
+        # 把累计变量 `total` 初始化为 0，后续通常会在循环中不断累加每一项。
         total = 0
+        # 通过下标/键读取 `students[0]['score']` 指定的数据，并保存到 `max_score`；使用前需保证索引或键有效。
         max_score = students[0]["score"]
+        # 通过下标/键读取 `students[0]['score']` 指定的数据，并保存到 `min_score`；使用前需保证索引或键有效。
         min_score = students[0]["score"]
+        # 依次取出 `students` 列表中的每个学生记录，并暂时用 `student` 指向当前记录。
         for student in students:
+            # 把 `student['score']` 累加到 `total`，相当于 `total = total + student['score']`；这是更新原变量，而不是创建新变量。
             total += student['score']
+            # 判断条件 `student['score'] > max_score`；条件为真时执行 if 分支，否则按后续 elif/else 分支处理。
             if student["score"] > max_score:
+                # 通过下标/键读取 `student['score']` 指定的数据，并保存到 `max_score`；使用前需保证索引或键有效。
                 max_score = student["score"]
+            # 判断条件 `student['score'] < min_score`；条件为真时执行 if 分支，否则按后续 elif/else 分支处理。
             if student["score"] < min_score:
+                # 通过下标/键读取 `student['score']` 指定的数据，并保存到 `min_score`；使用前需保证索引或键有效。
                 min_score = student["score"]
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("============成绩统计==========")
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("总分：", total)
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("平均分：", total / len(students))
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("最高分：", max_score)
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("最低分：", min_score)
+# 定义函数 `main`；参数为空，函数体负责具体处理，调用处应关注传入参数和返回值。
 def main():
+    # 创建空列表 `students`，后续把逐步处理得到的记录或结果追加到其中。
     students = []
+    # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
     print("===============欢迎使用学生成绩管理系统================")
+    # 进入持续循环；必须通过循环体中的 `break`、`return` 或异常等方式结束，通常用于反复读取并校验输入。
     while True:
+        # 调用 `input()` 显示提示并读取用户输入，把返回的字符串保存到 `name`；需要数值运算时再显式转换类型。
         name = input("请输入学生姓名：")
+        # 判断条件 `name == 'exit'`；条件为真时执行 if 分支，否则按后续 elif/else 分支处理。
         if name == "exit":
+            # `break` 会立即结束当前循环，并继续执行循环之后的语句。
             break
+        # 调用 `input()` 显示提示并读取用户输入，把返回的字符串保存到 `score`；需要数值运算时再显式转换类型。
         score = input("请输入学生成绩：")
+        # 把表达式转换为浮点数并存入 `score`；输入文本不符合数值格式时可能抛出 `ValueError`。
         score = float(score)
+        # 把当前对象整理成字典 `student`，用键名关联姓名、成绩、等级等字段，便于后续按键读取。
         student = {"name": name, "score": score}
+        # 把一个元素追加到列表末尾；这是原地修改，列表变量仍指向同一个列表对象。
         students.append(student)
+        # 把括号中的内容输出到控制台；字符串中的 `{}`、`%s` 或 `%d` 等格式占位符应与传入的数据类型匹配。
         print("添加成功！")
+    # 调用 `show_students` 执行操作；如果它有返回值而这里没有接收，通常表示代码只需要它产生的副作用。
     show_students(students)
+    # 调用 `show_summary` 执行操作；如果它有返回值而这里没有接收，通常表示代码只需要它产生的副作用。
     show_summary(students)
+# 调用 `main` 执行操作；如果它有返回值而这里没有接收，通常表示代码只需要它产生的副作用。
 main()

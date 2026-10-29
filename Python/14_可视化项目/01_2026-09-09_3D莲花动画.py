@@ -7,6 +7,12 @@
 用途：综合练习数组运算、三维曲面、颜色插值和动画帧更新。
 最后修改：2026-09-09
 """
+# 文件用途：本文件围绕“3D莲花动画”展开。
+# 核心知识点：列表与字典、函数、循环、分支判断、可视化。
+# 基本流程：根据代码中的输入或初始数据，按条件、循环和函数调用完成处理，再输出结果。
+# 输入/输出：以本文件实际使用的参数、数据结构或其他操作为准；没有显式输入输出时，不代表没有计算或状态变化。
+# 阅读提醒：注释用于解释当前代码的实际行为；若示例输入范围有限，扩展使用前应自行验证边界情况。
+# 模块依赖：numpy as np, matplotlib.pyplot as plt, mpl_toolkits.mplot3d, matplotlib.animation。
 import numpy as np  # 导入 numpy 库，用于数组和数学运算
 import matplotlib.pyplot as plt  # 导入 matplotlib 的绘图模块，用于画 2D/3D 图形
 from mpl_toolkits.mplot3d import Axes3D  # 导入 3D 坐标轴工具，支持三维绘图

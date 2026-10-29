@@ -1,3 +1,11 @@
+/*
+ * 文件用途：本文件围绕“两数之和 哈希表优化”展开。
+ * 核心知识点：指针、数组、结构体、动态内存、哈希表、循环、分支判断、函数。
+ * 基本流程：根据代码中的输入或初始数据，按条件、循环和函数调用完成处理，再输出结果。
+ * 输入：本文件使用预设数据、初始化值或函数参数。输出：通过控制台打印结果。
+ * 阅读提醒：指针和动态内存相关操作必须确认地址有效，并注意释放已申请的内存。 检查数组下标、字符串结束符和缓冲区容量，避免越界访问。 阅读算法时注意边界情况、重复数据，以及关键变量在每轮处理后的变化。
+ * 依赖头文件：stddef.h, stdint.h, stdio.h, stdlib.h。
+ */
 #include <stddef.h> // 提供 size_t，用于表示数组容量和下标。
 #include <stdint.h> // 提供 SIZE_MAX，用于检查容量计算是否可能溢出。
 #include <stdio.h>  // 提供 printf，让程序能够输出运行结果。
@@ -12,8 +20,10 @@ typedef struct {
 
 // 根据数字 key 计算哈希表的起始位置；capacity 是哈希表的槽位总数。
 static size_t hash_index(long long key, size_t capacity) {
+// 声明并初始化变量；`=` 是赋值运算符，用右侧表达式的值设置左侧变量，而不是比较两个值。
     unsigned long long nonnegative_key =
         (unsigned long long)key; // 将整数转换为无符号整数，避免对负数直接求余带来的负下标。
+// 结束当前函数调用，并把表达式 `(size_t)(nonnegative_key %` 的结果返回给调用者。
     return (size_t)(nonnegative_key %
                     capacity); // 把数字映射到 0 到 capacity - 1 范围内的一个槽位。
 } // 结束 hash_index 函数。
@@ -21,6 +31,7 @@ static size_t hash_index(long long key, size_t capacity) {
 // 从计算出的起始位置查找 key；如果未找到，就返回第一个空闲槽位的位置。
 static size_t find_slot(const HashEntry table[], size_t capacity, long long key) {
     size_t position = hash_index(key, capacity); // 先计算 key 对应的哈希表起始位置。
+// 只要 while 后的条件成立，就重复执行循环体；检查循环体是否会推进相关变量，确保条件最终能变为假。
     while (table[position].used &&
            table[position].key !=
                key) { // 如果槽位已被占用但存的不是目标数字，就说明发生了哈希冲突。
@@ -38,6 +49,7 @@ int two_sum_hash(const int nums[], int n, int target, int result[2]) {
     result[0] = -1; // 将第一个结果下标初始化为 -1，表示暂时没有答案。
     result[1] = -1; // 将第二个结果下标初始化为 -1，表示暂时没有答案。
 
+// 判断条件 `(n < 0 ||` 是否成立；条件为真时执行对应分支，否则跳过或转入其他分支。
     if (n < 0 ||
         (n > 0 && nums == NULL)) { // 数组长度不能为负数；长度大于 0 时，输入数组也必须存在。
         return -1;                 // 输入参数不合法，返回错误状态。
@@ -47,13 +59,16 @@ int two_sum_hash(const int nums[], int n, int target, int result[2]) {
         return -1;                        // 容量计算会溢出，不能继续申请哈希表。
     } // 结束容量计算溢出检查。
 
+// 声明并初始化变量；`=` 是赋值运算符，用右侧表达式的值设置左侧变量，而不是比较两个值。
     size_t capacity =
         (size_t)n * 2 + 1; // 申请超过元素数量两倍的槽位，降低冲突概率并确保表中有空槽。
+// 判断条件 `(capacity >` 是否成立；条件为真时执行对应分支，否则跳过或转入其他分支。
     if (capacity >
         SIZE_MAX / sizeof(HashEntry)) { // 检查申请的槽位数量乘以每个槽位大小是否可能溢出。
         return -1;                      // 所需内存大小无法安全表示，返回错误状态。
     } // 结束内存大小溢出检查。
 
+// 更新变量或保存计算结果；逐步跟踪右侧表达式，有助于理解每轮循环中的数据变化。
     HashEntry *table =
         calloc(capacity, sizeof(*table)); // 申请并清零哈希表内存，让所有槽位的 used 初始为 0。
     if (table == NULL) {                  // 检查操作系统是否成功分配了所需内存。
@@ -61,13 +76,16 @@ int two_sum_hash(const int nums[], int n, int target, int result[2]) {
     } // 结束内存申请检查。
 
     for (int i = 0; i < n; i++) { // 从左到右遍历 nums，每轮处理一个当前元素。
+// 声明并初始化变量；`=` 是赋值运算符，用右侧表达式的值设置左侧变量，而不是比较两个值。
         long long need =
             (long long)target -
             (long long)
                 nums[i]; // 计算当前数字需要搭配的补数；转换为 long long 可避免 int 减法溢出。
+// 声明并初始化变量；`=` 是赋值运算符，用右侧表达式的值设置左侧变量，而不是比较两个值。
         size_t need_slot =
             find_slot(table, capacity, need); // 在哈希表中查找补数，避免再使用一层循环遍历数组。
 
+// 判断条件 `(table[need_slot].used &&` 是否成立；条件为真时执行对应分支，否则跳过或转入其他分支。
         if (table[need_slot].used &&
             table[need_slot].key == need) {     // 槽位已使用且键值匹配，说明以前遇到过补数。
             result[0] = table[need_slot].index; // 把以前出现的补数的下标保存为第一个答案。
@@ -77,6 +95,7 @@ int two_sum_hash(const int nums[], int n, int target, int result[2]) {
         } // 结束补数查找成功的分支。
 
         long long current = (long long)nums[i]; // 把当前数字转成 long long，作为哈希表中保存的键。
+// 声明并初始化变量；`=` 是赋值运算符，用右侧表达式的值设置左侧变量，而不是比较两个值。
         size_t current_slot =
             find_slot(table, capacity, current); // 找到当前数字已有的位置，或找到可供插入的空槽位。
         if (!table[current_slot].used) {         // 只有数字此前未被记录时，才写入新的键值对。
@@ -94,9 +113,11 @@ int two_sum_hash(const int nums[], int n, int target, int result[2]) {
 int main(void) {
     int nums[] = {2, 7, 11, 15}; // 创建测试数组，元素下标依次为 0、1、2、3。
     int target = 9;              // 设置目标和为 9。
+// 声明并初始化变量；`=` 是赋值运算符，用右侧表达式的值设置左侧变量，而不是比较两个值。
     int n =
         (int)(sizeof(nums) / sizeof(nums[0])); // 用数组总字节数除以单个元素字节数，计算元素个数。
     int result[2] = {-1, -1};                  // 创建两个整数的结果数组，用来接收函数返回的下标。
+// 声明并初始化变量；`=` 是赋值运算符，用右侧表达式的值设置左侧变量，而不是比较两个值。
     int status = two_sum_hash(nums, n, target,
                               result); // 调用函数，并用 status 接收找到、未找到或错误的状态。
 
@@ -105,6 +126,7 @@ int main(void) {
     } else if (status == 0) {                   // 返回 0 代表所有组合检查结束后仍未找到答案。
         printf("没有找到符合条件的两个数。\n"); // 输出未找到的提示。
     } else {                                    // 返回 -1 代表输入参数不合法或申请内存失败。
+// 向标准输出打印提示或结果；格式字符串中的占位符必须与后续实参的类型匹配。
         printf(
             "程序出错：输入参数不合法或内存申请失败。\n"); // 输出错误提示，避免把错误误认为没找到答案。
     } // 结束状态判断。
