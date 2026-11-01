@@ -7,91 +7,330 @@
 用途：练习函数、字典、菜单循环和模块化组织。
 最后修改：2026-09-09
 """
-# 文件用途：本文件围绕“通讯录 字典版”展开。
-# 核心知识点：列表与字典、函数、循环、分支判断。
-# 基本流程：根据代码中的输入或初始数据，按条件、循环和函数调用完成处理，再输出结果。
-# 输入：从标准输入读取数据或由调用者传入参数。输出：通过控制台打印处理结果。
-# 阅读提醒：注释用于解释当前代码的实际行为；若示例输入范围有限，扩展使用前应自行验证边界情况。
-print("#"*20,"欢迎使用Python通讯录","#"*20)  # 打印 20 个 # 与欢迎语组成的标题
-print("1-修改联系人")  # 菜单项 1：修改联系人
-print("2-所有联系人")  # 菜单项 2：所有联系人
-print("3-添加联系人")  # 菜单项 3：添加联系人
-print("4-查询联系人手机号")  # 菜单项 4：按姓名查手机号
-print("5-查询手机号的联系人姓名")  # 菜单项 5：按手机号查姓名
-print("6-删除联系人")  # 菜单项 6：删除联系人
-print("7-退出")  # 菜单项 7：退出
+print("#"*20,"欢迎使用Python通讯录","#"*20)
+print("1-修改联系人")
+print("2-所有联系人")
+print("3-添加联系人")
+print("4-查询联系人手机号")
+print("5-查询手机号的联系人姓名")
+print("6-删除联系人")
+print("7-退出")
 
-tongxunlu = {}  # 空字典：键是姓名，值是手机号
-phone = {}  # 空字典：键是手机号，值是姓名
+tongxunlu = {}
+phone = {}
 
-def search(name):  # 定义按姓名查找手机号的函数
-    if name in tongxunlu:  # 如果该姓名存在于字典中
-        print(f"{name}-->{tongxunlu[name]}")  # 打印姓名和对应手机号
-    else:  # 姓名不存在
-        print(f"未找到该联系人:{name}")  # 提示未找到该联系人
+def search(name):
+    if name in tongxunlu:
+        print(f"{name}-->{tongxunlu[name]}")
+    else:
+        print(f"未找到该联系人:{name}")
 
-def search_phone(num):  # 定义按手机号查找姓名的函数
-    if num in phone:  # 如果该手机号存在于字典中
-        print(f"{num}-->{phone[num]}")  # 打印手机号和对应姓名
-    else:  # 手机号不存在
-        print(f"未找到该手机号:{num}")  # 提示未找到该手机号
+def search_phone(num):
+    if num in phone:
+        print(f"{num}-->{phone[num]}")
+    else:
+        print(f"未找到该手机号:{num}")
 
-def add(name, phone_num):  # 定义添加联系人的函数
-    if name in tongxunlu:  # 如果姓名已存在
-        print(f"已添加{name}联系人，无需重复添加")  # 提示已存在，不重复添加
-    else:  # 姓名不存在
-        tongxunlu[name] = phone_num  # 在姓名字典里登记手机号
-        phone[phone_num] = name  # 在手机号字典里登记姓名
-        print(f"已添加{name}联系人-->{phone_num}")  # 打印添加成功信息
+def add(name, phone_num):
+    if name in tongxunlu:
+        print(f"已添加{name}联系人，无需重复添加")
+    else:
+        tongxunlu[name] = phone_num
+        phone[phone_num] = name
+        print(f"已添加{name}联系人-->{phone_num}")
 
-def delete(name):  # 定义删除联系人的函数
-    if name in tongxunlu:  # 如果姓名存在
-        number = tongxunlu.pop(name)  # 从姓名字典弹出对应的手机号
-        phone.pop(number)  # 再用该手机号删除手机号字典里的记录
-        print(f"已成功删除{name}")  # 打印删除成功
-    else:  # 姓名不存在
-        print(f"删除失败！并未找到{name}")  # 打印删除失败
+def delete(name):
+    if name in tongxunlu:
+        number = tongxunlu.pop(name)
+        phone.pop(number)
+        print(f"已成功删除{name}")
+    else:
+        print(f"删除失败！并未找到{name}")
 
-def modify(name, phone_num):  # 定义修改联系人手机号的函数
-    if name in tongxunlu:  # 如果姓名存在
-        old = tongxunlu[name]  # 取出原来登记的手机号
-        tongxunlu[name] = phone_num  # 把姓名对应的手机号更新为新号码
-        phone.pop(old)  # 删除旧手机号对应的记录
-        phone[phone_num] = name  # 用新手机号重新登记姓名
-        print(f"已修改:{name}-->{phone_num}")  # 打印修改成功
-    else:  # 姓名不存在
-        print(f"未发现{name},请添加后重试")  # 提示需要先添加
+def modify(name, phone_num):
+    if name in tongxunlu:
+        old = tongxunlu[name]
+        tongxunlu[name] = phone_num
+        phone.pop(old)
+        phone[phone_num] = name
+        print(f"已修改:{name}-->{phone_num}")
+    else:
+        print(f"未发现{name},请添加后重试")
 
-while True:  # 无限循环，直到用户选择退出
-    gongneng = input("请输入你需要的程序（输入数字）")  # 接收用户选择的功能编号
-    print("1-修改联系人")  # 再次打印菜单项 1
-    print("2-所有联系人")  # 菜单项 2
-    print("3-添加联系人")  # 菜单项 3
-    print("4-查询联系人手机号")  # 菜单项 4
-    print("5-查询手机号的联系人姓名")  # 菜单项 5
-    print("6-删除联系人")  # 菜单项 6
-    print("7-退出")  # 菜单项 7
-    if gongneng == "1":  # 选择 1：修改联系人
-        name = input("请输入姓名")  # 输入要修改的姓名
-        phone_num = input("请输入手机号")  # 输入新的手机号
-        modify(name, phone_num)  # 调用修改函数
-    elif gongneng == "2":  # 选择 2：显示所有联系人
-        for name, phone_num in tongxunlu.items():  # 遍历姓名字典的每个键值对
-            print("姓名",name,"手机号",phone_num)  # 打印姓名和手机号
-    elif gongneng == "3":  # 选择 3：添加联系人
-        name = input("请输入姓名")  # 输入姓名
-        phone_num = input("请输入手机号")  # 输入手机号
-        add(name, phone_num)  # 调用添加函数
-    elif gongneng == "4":  # 选择 4：按姓名查手机号
-        name = input("请输入姓名")  # 输入姓名
-        search(name)  # 调用按姓名查找的函数
-    elif gongneng == "5":  # 选择 5：按手机号查姓名
-        num = input("请输入手机号")  # 输入手机号
-        search_phone(num)  # 调用按手机号查找的函数
-    elif gongneng == "6":  # 选择 6：删除联系人
-        name = input("请输入姓名")  # 输入姓名
-        delete(name)  # 调用删除函数
-    elif gongneng == "7":  # 选择 7：退出
-        break  # 跳出循环，程序结束
-    else:  # 输入其它数字
-        print("输入的数字无效，请重新输入1～7的数字")  # 提示输入无效
+while True:
+    gongneng = input("请输入你需要的程序（输入数字）")
+    print("1-修改联系人")
+    print("2-所有联系人")
+    print("3-添加联系人")
+    print("4-查询联系人手机号")
+    print("5-查询手机号的联系人姓名")
+    print("6-删除联系人")
+    print("7-退出")
+    if gongneng == "1":
+        name = input("请输入姓名")
+        phone_num = input("请输入手机号")
+        modify(name, phone_num)
+    elif gongneng == "2":
+        for name, phone_num in tongxunlu.items():
+            print("姓名",name,"手机号",phone_num)
+    elif gongneng == "3":
+        name = input("请输入姓名")
+        phone_num = input("请输入手机号")
+        add(name, phone_num)
+    elif gongneng == "4":
+        name = input("请输入姓名")
+        search(name)
+    elif gongneng == "5":
+        num = input("请输入手机号")
+        search_phone(num)
+    elif gongneng == "6":
+        name = input("请输入姓名")
+        delete(name)
+    elif gongneng == "7":
+        break
+    else:
+        print("输入的数字无效，请重新输入1～7的数字")
+# # ====================================================================
+# # 文件名：04_2026-09-09_通讯录_字典版.py
+# # 作用：用字典做一个在内存里运行的通讯录：
+# #       菜单：1 修改联系人  2 查看所有联系人  3 添加联系人  4 按姓名查手机号
+# #             5 按手机号查姓名  6 删除联系人  7 退出
+# #       用两个字典互相对应：一个"姓名 → 手机号"，一个"手机号 → 姓名"，所以双向都能查。
+# #       说明：数据只保存在内存里，程序结束就没了。
+# #
+# # 怎么运行（在 Mac 终端里，先 cd 到这个文件所在的文件夹）：
+# #   运行：python3 "04_2026-09-09_通讯录_字典版.py"
+# #   说明：Python 是边读边执行的，不需要先编译。
+# # ====================================================================
+# # 文件开头用三引号包起来的文字叫"文档字符串"（docstring），用来说明这个文件做什么。运行时不会输出它。
+# """
+# 简介：使用字典实现一个可在内存中操作的联系人通讯录。
+# 功能：
+# - 支持姓名与手机号的双向查询。
+# - 添加、修改、删除和查看联系人。
+# - 通过编号菜单持续操作直到退出。
+# 用途：练习函数、字典、菜单循环和模块化组织。
+# 最后修改：2026-09-09
+# """
+#
+#
+# # --------------------------------------------------------------------
+# # 第一部分：欢迎信息和菜单
+# # --------------------------------------------------------------------
+# # 字符串乘整数 = 把字符串重复若干次："#" * 20 得到 20 个 #，用来画装饰线。
+# # print 里用逗号隔开多个内容，会依次输出，中间自动加一个空格。
+# print("#"*20,"欢迎使用Python通讯录","#"*20)
+# print("1-修改联系人")
+# print("2-所有联系人")
+# print("3-添加联系人")
+# print("4-查询联系人手机号")
+# print("5-查询手机号的联系人姓名")
+# print("6-删除联系人")
+# print("7-退出")
+#
+#
+# # --------------------------------------------------------------------
+# # 第二部分：准备两个字典
+# # --------------------------------------------------------------------
+# # {} 是"空字典"。字典用"键: 值"成对保存数据，用键能直接找到对应的值。
+# #   tongxunlu（通讯录）：键是姓名，值是手机号；
+# #   phone：键是手机号，值是姓名。
+# # 两个字典方向相反，这样"按姓名查手机号"和"按手机号查姓名"都很快。
+# tongxunlu = {}
+# phone = {}
+#
+#
+# # --------------------------------------------------------------------
+# # 第三部分：功能函数
+# # --------------------------------------------------------------------
+# # def 函数名(参数): 用来定义函数 = 一段有名字、可以反复使用的代码。search 按姓名查询手机号。
+# def search(name):
+#     # 对字典来说，in 检查"这个键是否存在"：这个姓名是不是通讯录里的联系人。
+#     if name in tongxunlu:
+#         # f"..." 叫 f-string（格式化字符串）：字符串前面加 f，里面的 {} 会被替换成表达式的值。
+#         # tongxunlu[name] 用键取出对应的值（手机号）。
+#         print(f"{name}-->{tongxunlu[name]}")
+#
+#     # 不存在：提示没找到。先判断再取值，是为了避免查不存在的键时报错（KeyError）。
+#     else:
+#         print(f"未找到该联系人:{name}")
+#
+# # 按手机号查询姓名，原理相同，只是查的是 phone 字典。
+# def search_phone(num):
+#     if num in phone:
+#         print(f"{num}-->{phone[num]}")
+#     else:
+#         print(f"未找到该手机号:{num}")
+#
+# # 添加联系人。参数：姓名和手机号。
+# def add(name, phone_num):
+#     # 这个姓名已经有了，不重复添加。
+#     if name in tongxunlu:
+#         print(f"已添加{name}联系人，无需重复添加")
+#
+#     # 没有才添加：
+#     else:
+#         # 字典[键] = 值：往字典里添加一对数据（如果键已经存在，就是修改它的值）。
+#         tongxunlu[name] = phone_num
+#
+#         # 两个字典要同步：在反向字典里也记一对，保证双向查询都能用。
+#         phone[phone_num] = name
+#         print(f"已添加{name}联系人-->{phone_num}")
+#
+# # 删除联系人。
+# def delete(name):
+#     if name in tongxunlu:
+#         # 字典.pop(键)：删除这对数据，并把被删除的值返回。这里先删掉姓名那一对，同时拿到它的手机号，存进 number。
+#         number = tongxunlu.pop(name)
+#
+#         # 再用手机号删掉反向字典里对应的那一对，两个字典保持同步。
+#         phone.pop(number)
+#         print(f"已成功删除{name}")
+#     else:
+#         print(f"删除失败！并未找到{name}")
+#
+# # 修改联系人的手机号。
+# def modify(name, phone_num):
+#     if name in tongxunlu:
+#         # 先记下旧手机号，因为反向字典里要删掉旧手机号这一对。
+#         old = tongxunlu[name]
+#
+#         # 给这个姓名换上新手机号。
+#         tongxunlu[name] = phone_num
+#
+#         # 删掉反向字典里的旧手机号。
+#         phone.pop(old)
+#
+#         # 在反向字典里记上新手机号。
+#         phone[phone_num] = name
+#         print(f"已修改:{name}-->{phone_num}")
+#     else:
+#         print(f"未发现{name},请添加后重试")
+#
+#
+# # --------------------------------------------------------------------
+# # 第四部分：主菜单循环
+# # --------------------------------------------------------------------
+# # while 条件: 的意思是"条件为真，就一直重复缩进里的代码"。True 永远为真，是"无限循环"，要靠 break 退出。
+# while True:
+#     # input(提示语)：显示提示语，等用户输入并按回车，把输入的内容当作字符串返回。gongneng（功能）保存用户选的编号。
+#     gongneng = input("请输入你需要的程序（输入数字）")
+#
+#     # 这几行把菜单再显示一遍（所以菜单在你输入选项之后才出现，是下一次输入之前的提示）。
+#     print("1-修改联系人")
+#     print("2-所有联系人")
+#     print("3-添加联系人")
+#     print("4-查询联系人手机号")
+#     print("5-查询手机号的联系人姓名")
+#     print("6-删除联系人")
+#     print("7-退出")
+#
+#     # if ... elif ... else 是"多选一"：从上往下依次检查，遇到第一个成立的就执行，其余跳过。
+#     # == 是"判断是否相等"。gongneng 是字符串，所以和字符串 "1" 比较。
+#     if gongneng == "1":
+#         name = input("请输入姓名")
+#         phone_num = input("请输入手机号")
+#
+#         # 调用函数：把姓名和手机号传给 modify。
+#         modify(name, phone_num)
+#     elif gongneng == "2":
+#         # 字典.items() 取出所有"键值对"，每一对是 (姓名, 手机号)。for 每次把一对拆开，分别给 name 和 phone_num（叫"解包"）。
+#         for name, phone_num in tongxunlu.items():
+#             print("姓名",name,"手机号",phone_num)
+#     elif gongneng == "3":
+#         name = input("请输入姓名")
+#         phone_num = input("请输入手机号")
+#         add(name, phone_num)
+#     elif gongneng == "4":
+#         name = input("请输入姓名")
+#         search(name)
+#     elif gongneng == "5":
+#         num = input("请输入手机号")
+#         search_phone(num)
+#     elif gongneng == "6":
+#         name = input("请输入姓名")
+#         delete(name)
+#
+#     # 选 7：退出。
+#     elif gongneng == "7":
+#         # break 的意思是"立刻跳出整个 while 循环"，程序结束。
+#         break
+#
+#     # 前面的编号都不是，提示输入无效，然后回到循环开头。
+#     else:
+#         print("输入的数字无效，请重新输入1～7的数字")
+#
+# # ====================================================================
+# # 测试时依次输入（每行输完按一次回车）：
+# #   3
+# #   小明
+# #   13800001111
+# #   3
+# #   小红
+# #   13900002222
+# #   3
+# #   小明
+# #   111
+# #   2
+# #   4
+# #   小明
+# #   5
+# #   13900002222
+# #   1
+# #   小红
+# #   13700003333
+# #   6
+# #   小明
+# #   2
+# #   9
+# #   7
+# #
+# # 完整的预期输出（我在电脑上实际运行过，应该与下面完全一致）：
+# #   #################### 欢迎使用Python通讯录 ####################
+# #   1-修改联系人
+# #   2-所有联系人
+# #   3-添加联系人
+# #   4-查询联系人手机号
+# #   5-查询手机号的联系人姓名
+# #   6-删除联系人
+# #   7-退出
+# #   请输入你需要的程序（输入数字）1-修改联系人
+# #   2-所有联系人
+# #   3-添加联系人
+# #   4-查询联系人手机号
+# #   5-查询手机号的联系人姓名
+# #   6-删除联系人
+# #   7-退出
+# #   请输入姓名请输入手机号已添加小明联系人-->13800001111
+# #   请输入你需要的程序（输入数字）1-修改联系人
+# #   2-所有联系人
+# #   3-添加联系人
+# #   4-查询联系人手机号
+# #   5-查询手机号的联系人姓名
+# #   6-删除联系人
+# #   7-退出
+# #   请输入姓名请输入手机号已添加小红联系人-->13900002222
+# #   请输入你需要的程序（输入数字）1-修改联系人
+# #   2-所有联系人
+# #   3-添加联系人
+# #   4-查询联系人手机号
+# #   5-查询手机号的联系人姓名
+# #   6-删除联系人
+# #   7-退出
+# #   请输入姓名请输入手机号已添加小明联系人，无需重复添加
+# #   请输入你需要的程序（输入数字）1-修改联系人
+# #   2-所有联系人
+# #   3-添加联系人
+# #   4-查询联系人手机号
+# #   ……（中间省略 50 行）
+# #   6-删除联系人
+# #   7-退出
+# #   输入的数字无效，请重新输入1～7的数字
+# #   请输入你需要的程序（输入数字）1-修改联系人
+# #   2-所有联系人
+# #   3-添加联系人
+# #   4-查询联系人手机号
+# #   5-查询手机号的联系人姓名
+# #   6-删除联系人
+# #   7-退出
+# # ====================================================================

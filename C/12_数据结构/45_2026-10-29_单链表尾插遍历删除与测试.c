@@ -1,373 +1,132 @@
 
-#include <stdio.h>  // 提供 printf()、scanf() 等输入输出函数
-#include <stdlib.h> // 提供 malloc()、free()、exit() 等内存管理函数
+#include <stdio.h>
+#include <stdlib.h>
 
-/*
- * 第一部分：定义链表节点
- *
- * 可以把链表想象成一列通过绳子连接起来的盒子。
- *
- * 每个盒子（节点）里面有两样东西：
- * 1. data：存放实际的数据，例如 10、20、30。
- * 2. next：存放下一个盒子的地址，用来把节点连接起来。
- *
- * struct Node 表示这个结构体的类型名称。
- * typedef struct Node { ... } Node;
- * 则让我们以后可以直接写 Node，而不用每次写 struct Node。
- */
 typedef struct Node {
-    int data;          // 保存当前节点的数据，是一个整数
-    struct Node *next; // 保存下一个节点的地址
-                       // 如果没有下一个节点，就保存 NULL
+    int data;
+    struct Node *next;
 } Node;
 
-/*
- * 第二部分：全局统计变量
- *
- * 全局变量在函数外面定义，因此本文件中的函数都可以访问它们。
- * 它们在程序启动时会自动初始化为 0。
- *
- * 注意：这里统计的是通过本程序封装的函数进行的创建和释放，
- * 并不是操作系统对所有内存操作的全面监控。
- */
-int created_count = 0; // 累计创建了多少个节点
-int freed_count = 0;   // 累计释放了多少个节点
-int total_checks = 0;  // 累计执行了多少项测试
-int failed_checks = 0; // 累计有多少项测试失败
+int created_count = 0;
+int freed_count = 0;
+int total_checks = 0;
+int failed_checks = 0;
 
-/*
- * 第三部分：创建节点
- *
- * 参数 value：调用者希望新节点保存的整数。
- *
- * 返回值 Node *：
- * 返回新节点的地址，让调用者能够找到这个节点。
- */
 Node *create_node(int value) {
 
-    /*
-     * malloc(sizeof(Node)) 的意思是：
-     * 向系统申请一块足够存放一个 Node 节点的内存。
-     *
-     * sizeof(Node) 会自动计算 Node 需要多少字节，
-     * 不需要我们手动计算结构体大小。
-     *
-     * malloc() 返回的是这块内存的地址。
-     * (Node *) 是类型转换，将返回的地址转换为 Node * 类型。
-     */
     Node *new_node = (Node *)malloc(sizeof(Node));
 
-    /*
-     * 内存申请可能失败。
-     * 失败时 malloc() 返回 NULL。
-     *
-     * 如果没有检查就使用这个地址，
-     * 例如 new_node->data = value，
-     * 就可能导致程序崩溃。
-     */
     if (new_node == NULL) {
         printf("内存申请失败，程序结束。\n");
-        exit(EXIT_FAILURE); // 结束程序，并报告异常退出
+        exit(EXIT_FAILURE);
     }
 
-    // 将调用者提供的数据写入新节点
     new_node->data = value;
 
-    /*
-     * 新节点刚创建时，还没有连接其他节点。
-     * 所以先将 next 设置为 NULL。
-     *
-     * -> 是通过结构体指针访问成员的运算符。
-     * new_node->data 等价于 (*new_node).data。
-     */
     new_node->next = NULL;
 
-    // 成功创建一个节点，因此创建计数加 1
     created_count++;
 
-    // 返回新节点的地址
     return new_node;
 }
 
-/*
- * 第四部分：释放单个节点
- *
- * 参数 node：准备释放的节点地址。
- *
- * free() 用来归还之前通过 malloc() 申请的内存。
- * 释放后，不能再通过原地址读取这个节点的数据。
- */
 void destroy_node(Node *node) {
 
-    /*
-     * 防御性检查：
-     * 如果 node 是 NULL，就不进行释放。
-     *
-     * 这样可以避免对空地址进行不必要的操作。
-     */
     if (node == NULL) {
         return;
     }
 
-    // 释放 node 指向的内存
     free(node);
 
-    // 记录成功执行了一次节点释放
     freed_count++;
 }
 
-/*
- * 第五部分：头插法
- *
- * 例如原链表：
- * head -> 20 -> 30 -> NULL
- *
- * 执行 insert_head(head, 10) 后：
- * head -> 10 -> 20 -> 30 -> NULL
- *
- * 为什么要返回 Node *？
- * 因为头插可能改变链表的第一个节点，
- * 调用者必须接收新的头指针。
- */
 Node *insert_head(Node *head, int value) {
 
-    // 创建一个保存 value 的新节点
     Node *new_node = create_node(value);
 
-    /*
-     * 先让新节点指向原来的第一个节点。
-     *
-     * 假设原来的 head 指向节点 20，
-     * 执行后 new_node->next 就指向节点 20。
-     */
     new_node->next = head;
 
-    /*
-     * 返回新节点的地址。
-     * 调用者应写：
-     * head = insert_head(head, 10);
-     *
-     * 这样 head 才会更新为新的第一个节点。
-     */
     return new_node;
 }
 
-/*
- * 第六部分：尾插法
- *
- * 尾插就是将新节点添加到链表的最后面。
- *
- * 例如：
- * 20 -> 30 -> NULL
- *
- * 尾插 40 后：
- * 20 -> 30 -> 40 -> NULL
- */
 Node *insert_tail(Node *head, int value) {
 
-    // 先创建新节点。创建函数已经将 new_node->next 设置为 NULL。
     Node *new_node = create_node(value);
 
-    /*
-     * 如果 head == NULL，说明原链表为空。
-     *
-     * 空链表没有第一个节点，
-     * 因此新节点自己就是第一个节点。
-     */
     if (head == NULL) {
         return new_node;
     }
 
-    // 从链表第一个节点开始寻找最后一个节点
     Node *current = head;
 
-    /*
-     * current->next != NULL 表示当前节点后面还有节点。
-     *
-     * 每次执行 current = current->next，
-     * 就向后移动一个节点。
-     *
-     * 当 current->next == NULL 时，
-     * current 就是原链表最后一个节点。
-     */
     while (current->next != NULL) {
         current = current->next;
     }
 
-    // 将原来的最后一个节点连接到新节点
     current->next = new_node;
 
-    /*
-     * 尾插通常不会改变第一个节点，
-     * 所以返回原来的 head。
-     */
     return head;
 }
 
-/*
- * 第七部分：按值删除第一个匹配的节点
- *
- * 参数说明：
- * head：链表的头指针。
- * target：要删除的数据。
- * is_deleted：输出参数，用来告诉调用者删除是否成功。
- *
- * is_deleted 是 int *，表示它是一个整数变量的地址。
- * 通过 *is_deleted = 1，可以修改调用者的变量。
- *
- * 返回值：
- * 返回删除操作完成后的链表头指针。
- */
 Node *delete_by_value(Node *head, int target, int *is_deleted) {
 
-    /*
-     * 每次删除之前，先默认删除失败。
-     * 只有真正找到目标节点并释放它时，才设置为 1。
-     */
     *is_deleted = 0;
 
-    // 情况一：链表为空，没有任何节点可以删除
     if (head == NULL) {
         return NULL;
     }
 
-    /*
-     * 情况二：要删除的就是第一个节点。
-     *
-     * 原链表：
-     * head -> 10 -> 20 -> NULL
-     *
-     * 删除 10 后：
-     * head -> 20 -> NULL
-     *
-     * 这里必须更新 head，
-     * 否则 head 仍然会指向已释放的节点。
-     */
     if (head->data == target) {
 
-        // 暂时保存原来的第一个节点地址
         Node *to_delete = head;
 
-        // 将头指针移动到第二个节点
         head = head->next;
 
-        /*
-         * 释放原来的第一个节点。
-         * 此时 head 已经指向后续节点，
-         * 所以不会丢失后续链表。
-         */
         destroy_node(to_delete);
 
-        // 告诉调用者删除成功
         *is_deleted = 1;
 
-        // 返回更新后的头指针
         return head;
     }
 
-    /*
-     * 情况三：目标节点不在第一个位置。
-     *
-     * prev：当前节点的前一个节点。
-     * current：当前正在检查的节点。
-     *
-     * 例如：
-     * prev -> current -> 下一个节点
-     *
-     * 如果 current 是要删除的节点，
-     * 就让 prev 直接连接 current 后面的节点。
-     */
     Node *prev = head;
     Node *current = head->next;
 
-    // 从第二个节点开始，依次检查每个节点
     while (current != NULL) {
 
-        // 如果找到了第一个数据等于 target 的节点
         if (current->data == target) {
 
-            /*
-             * 跳过 current。
-             *
-             * 原来：
-             * prev -> current -> next_node
-             *
-             * 修改后：
-             * prev ------------> next_node
-             */
             prev->next = current->next;
 
-            // 释放被删除节点占用的内存
             destroy_node(current);
 
-            // 标记删除成功
             *is_deleted = 1;
 
-            /*
-             * 只删除第一个匹配的节点。
-             * 删除后立即返回，不再继续查找。
-             */
             return head;
         }
 
-        /*
-         * 没找到目标值时，两个指针都向后移动。
-         *
-         * prev 追上当前节点。
-         * current 再移动到下一个节点。
-         */
         prev = current;
         current = current->next;
     }
 
-    /*
-     * 如果循环结束仍然没有找到 target，
-     * 链表不会发生变化，删除标志仍然为 0。
-     */
     return head;
 }
 
-/*
- * 第八部分：释放整条链表
- *
- * 逐个释放链表中的节点。
- *
- * 注意：
- * 每次释放当前节点之前，必须先保存下一个节点的地址。
- * 否则释放当前节点后，就不能再安全地读取它的 next 成员。
- */
 Node *free_list(Node *head) {
 
-    // 只要 head 不是 NULL，就说明还有节点需要释放
     while (head != NULL) {
 
-        // 先记住下一个节点的地址
         Node *next_node = head->next;
 
-        // 释放当前节点
         destroy_node(head);
 
-        // 继续处理刚才保存的下一个节点
         head = next_node;
     }
 
-    /*
-     * 所有节点都已经释放。
-     * 返回 NULL，方便调用者写：
-     * head = free_list(head);
-     */
     return NULL;
 }
 
-/*
- * 第九部分：打印链表
- *
- * 例如：
- * head -> 10 -> 20 -> 30 -> NULL
- *
- * 这里用 current 从头到尾遍历链表。
- * 打印当前节点后，必须将 current 移到下一个节点。
- */
 void print_list(Node *head) {
 
     Node *current = head;
@@ -376,32 +135,14 @@ void print_list(Node *head) {
 
     while (current != NULL) {
 
-        // 打印当前节点的数据
         printf(" -> %d", current->data);
 
-        /*
-         * 关键语句：
-         * 移动到下一个节点。
-         *
-         * 如果忘记这一句，
-         * current 永远指向同一个节点，
-         * while 循环就会一直执行，形成死循环。
-         */
         current = current->next;
     }
 
-    // NULL 表示已经到达链表末尾
     printf(" -> NULL\n");
 }
 
-/*
- * 第十部分：统计链表节点数量
- *
- * 空链表有 0 个节点。
- * 只有一个节点的链表有 1 个节点。
- *
- * 遍历时，每访问一个节点，就将 count 加 1。
- */
 int count_nodes(Node *head) {
 
     int count = 0;
@@ -409,109 +150,48 @@ int count_nodes(Node *head) {
 
     while (current != NULL) {
 
-        // 当前确实存在一个节点，因此数量加 1
         count++;
 
-        /*
-         * 不能写 current = current->data。
-         *
-         * data 是整数，例如 20；
-         * next 才是下一个节点的地址。
-         */
         current = current->next;
     }
 
     return count;
 }
 
-/*
- * 第十一部分：检查内存计数是否平衡
- *
- * 理论上：
- * 已创建但尚未释放的节点数
- * = created_count - freed_count
- *
- * 如果链表是本程序唯一管理的节点集合，
- * 并且没有丢失节点，那么这个数应等于链表节点数。
- *
- * 注意：这是一种程序内部的计数检查，
- * 不是完整的内存泄漏检测工具。
- */
 int memory_ok(Node *head) { return created_count - freed_count == count_nodes(head); }
 
-/*
- * 第十二部分：检查两条数据序列是否相同
- *
- * expected 是数组，保存期望的数据。
- * expected_count 是数组中需要比较的元素数量。
- *
- * 例如：
- * expected = {20, 30, 50}
- *
- * 如果链表也是 20 -> 30 -> 50 -> NULL，
- * 那么比较结果为 1（相同）。
- */
 int list_equals(Node *head, const int expected[], int expected_count) {
 
     Node *current = head;
 
-    // 依次比较链表节点和数组中的对应元素
     for (int i = 0; i < expected_count; i++) {
 
-        /*
-         * 如果链表提前结束，
-         * 或当前节点数据与期望值不同，
-         * 就说明两者不相同。
-         */
         if (current == NULL || current->data != expected[i]) {
             return 0;
         }
 
-        // 移动到链表的下一个节点
         current = current->next;
     }
 
-    /*
-     * 数组比较完后，链表也必须恰好结束。
-     *
-     * 如果 current 仍然不是 NULL，
-     * 说明链表还有多余节点。
-     */
     return current == NULL;
 }
 
-/*
- * 第十三部分：通用测试函数
- *
- * condition 是需要检查的条件：
- * 1 表示条件成立。
- * 0 表示条件不成立。
- *
- * description 是本项测试的文字说明。
- */
 void check(int condition, const char *description) {
 
-    // 每执行一次检查，测试总数就增加 1
     total_checks++;
 
     if (condition) {
 
-        // 条件成立，打印通过信息
         printf("[通过] %s\n", description);
 
     } else {
 
-        // 条件不成立，打印失败信息
         printf("[失败] %s\n", description);
 
-        // 失败次数加 1
         failed_checks++;
     }
 }
 
-/*
- * 第十四部分：输出内存统计报告
- */
 void report_memory(void) {
 
     printf("[内存报告] 创建 %d 个节点，释放 %d 个节点，"
@@ -519,39 +199,16 @@ void report_memory(void) {
            created_count, freed_count, created_count - freed_count);
 }
 
-/*
- * 第十五部分：主函数
- *
- * C 程序通常从 main() 函数开始运行。
- * 下面依次测试：
- * 1. 空链表删除。
- * 2. 尾插节点。
- * 3. 删除头节点。
- * 4. 删除尾节点。
- * 5. 删除不存在的值。
- * 6. 删除唯一节点。
- * 7. 重复值只删除第一个。
- * 8. 释放所有剩余节点。
- */
 int main(void) {
 
-    // 一开始没有节点，所以头指针为 NULL
     Node *head = NULL;
 
-    // 保存最近一次删除操作是否成功
     int is_deleted = 0;
 
-    // 记录某次操作之前的释放次数，便于比较
     int freed_before = 0;
 
     printf("===== 开始测试 =====\n");
 
-    /*
-     * 测试 1：空链表删除 10。
-     *
-     * 空链表中没有任何节点，
-     * 因此删除应该失败，并且不能释放任何节点。
-     */
     printf("\n[测试 1] 空链表删除 10\n");
 
     freed_before = freed_count;
@@ -565,13 +222,6 @@ int main(void) {
     check(freed_count == freed_before, "空链表：没有释放节点");
     check(memory_ok(head), "空链表：内存计数平衡");
 
-    /*
-     * 准备测试数据：
-     * 插入 20、30、40、50。
-     *
-     * 预期链表：
-     * head -> 20 -> 30 -> 40 -> 50 -> NULL
-     */
     printf("\n[准备] 尾插 20、30、40、50\n");
 
     head = insert_tail(head, 20);
@@ -587,15 +237,6 @@ int main(void) {
 
     check(memory_ok(head), "尾插后：内存计数平衡");
 
-    /*
-     * 测试 2：删除头节点 20。
-     *
-     * 原链表：
-     * 20 -> 30 -> 40 -> 50
-     *
-     * 预期结果：
-     * 30 -> 40 -> 50
-     */
     printf("\n[测试 2] 删除头节点 20\n");
 
     freed_before = freed_count;
@@ -614,15 +255,6 @@ int main(void) {
 
     check(memory_ok(head), "删除头节点后：内存计数平衡");
 
-    /*
-     * 测试 3：删除尾节点 50。
-     *
-     * 原链表：
-     * 30 -> 40 -> 50
-     *
-     * 预期结果：
-     * 30 -> 40 -> NULL
-     */
     printf("\n[测试 3] 删除尾节点 50\n");
 
     freed_before = freed_count;
@@ -641,14 +273,6 @@ int main(void) {
 
     check(memory_ok(head), "删除尾节点后：内存计数平衡");
 
-    /*
-     * 测试 4：删除不存在的值 99。
-     *
-     * 预期：
-     * 删除标志为 0；
-     * 链表内容不变；
-     * 释放次数不变。
-     */
     printf("\n[测试 4] 删除不存在的值 99\n");
 
     freed_before = freed_count;
@@ -665,12 +289,6 @@ int main(void) {
 
     check(memory_ok(head), "删除不存在的值后：内存计数平衡");
 
-    /*
-     * 测试 5：删除唯一节点。
-     *
-     * 先删除 30，再删除剩下的 40。
-     * 删除 40 后，链表变成空链表。
-     */
     printf("\n[测试 5] 删除剩余节点，最终删除唯一节点 40\n");
 
     head = delete_by_value(head, 30, &is_deleted);
@@ -688,17 +306,6 @@ int main(void) {
     check(freed_count == freed_before + 1, "删除唯一节点：恰好释放 1 个节点");
     check(memory_ok(head), "空链表：内存计数平衡");
 
-    /*
-     * 测试 6：重复值。
-     *
-     * 创建：
-     * 5 -> 7 -> 5 -> NULL
-     *
-     * 删除值为 5 的第一个节点后：
-     * 7 -> 5 -> NULL
-     *
-     * 这里要验证的是：只删除第一个匹配节点。
-     */
     printf("\n[测试 6] 重复值：5、7、5 中只删除第一个 5\n");
 
     head = insert_tail(head, 5);
@@ -723,12 +330,6 @@ int main(void) {
 
     check(memory_ok(head), "重复值测试后：内存计数平衡");
 
-    /*
-     * 收尾：释放链表中的所有剩余节点。
-     *
-     * free_list() 返回 NULL，
-     * 因此必须将返回值重新赋给 head。
-     */
     printf("\n[收尾] 释放所有剩余节点\n");
 
     head = free_list(head);
@@ -743,11 +344,6 @@ int main(void) {
 
     printf("\n测试合计：%d 项，失败：%d 项\n", total_checks, failed_checks);
 
-    /*
-     * 按照常见约定：
-     * 返回 0 表示程序正常完成；
-     * 返回非 0 表示测试发现失败。
-     */
     if (failed_checks > 0) {
         return 1;
     }
@@ -756,3 +352,674 @@ int main(void) {
 
     return 0;
 }
+/*// ====================================================================
+// 文件名：45_2026-10-29_单链表尾插遍历删除与测试.c
+// 作用：一个完整的单链表练习，并带有"自动测试"：
+//       create_node    ：创建节点            destroy_node  ：释放节点（并计数）
+//       insert_head    ：头插（定义了，测试里没有用到）
+//       insert_tail    ：尾插                delete_by_value：按值删除（只删第一个匹配的）
+//       free_list      ：释放整条链表        print_list    ：输出链表
+//       count_nodes    ：统计节点个数
+//       check / list_equals / memory_ok：测试用的"检查工具"
+//       main 里做 6 组测试，每一项检查输出 [通过] 或 [失败]，
+//       并用"创建的节点数 - 释放的节点数 = 链表里现有的节点数"来核对有没有内存泄漏。
+//
+// 怎么运行（在 Mac 终端里，先 cd 到这个文件所在的文件夹）：
+//   编译：clang -Wall -Wextra -o demo "45_2026-10-29_单链表尾插遍历删除与测试.c"
+//   运行：./demo
+//   说明：编译 = 把人能看懂的 C 代码翻译成电脑能执行的程序。
+//         -Wall -Wextra 的意思是"把所有可疑的地方都警告我"，
+//         编译时出现警告，一定要弄明白原因，不要忽略。
+// ====================================================================
+
+
+// --------------------------------------------------------------------
+// 第一部分：引入"工具箱"
+// --------------------------------------------------------------------
+// <stdio.h> 是"标准输入输出"工具箱，printf 在里面。
+#include <stdio.h>
+
+// <stdlib.h> 里有 malloc（申请内存）、free（释放内存）、exit（结束程序）、EXIT_FAILURE（表示"失败"的退出码）。
+#include <stdlib.h>
+
+
+// --------------------------------------------------------------------
+// 第二部分：定义"节点"长什么样
+// --------------------------------------------------------------------
+// 节点由两样东西组成：data（存的整数）和 next（指向下一个节点的指针）。
+// struct Node *next：结构体里不能直接包含自己，但可以包含"指向同类型的指针"，这就是链表能"连起来"的原因。
+// typedef ... Node; 给它起个短名字 Node，以后直接写 Node。
+// 类比：链表像一列火车，每节车厢装着货物 data，挂钩 next 连着下一节；最后一节的挂钩是 NULL。
+typedef struct Node {
+    int data;
+    struct Node *next;
+} Node;
+
+
+// --------------------------------------------------------------------
+// 第三部分：全局计数器
+// --------------------------------------------------------------------
+// 写在函数外面的变量叫"全局变量"，所有函数都能使用。这四个计数器都从 0 开始：
+//   created_count ：一共创建了多少个节点（每创建一个加 1）；
+//   freed_count   ：一共释放了多少个节点（每释放一个加 1）；
+//   total_checks  ：一共做了多少项检查；
+//   failed_checks ：其中失败了几项。
+// 为什么要数创建和释放的个数？用来检查"内存泄漏"：用 malloc 借来的内存，必须用 free 还；
+// 程序结束时，创建数和释放数应该相等。
+int created_count = 0;
+int freed_count = 0;
+int total_checks = 0;
+int failed_checks = 0;
+
+
+// --------------------------------------------------------------------
+// 第四部分：创建一个新节点
+// --------------------------------------------------------------------
+// 返回类型 Node *：返回"指向 Node 的指针"，也就是新节点的地址。参数 value 是要存进节点的数据。
+Node *create_node(int value) {
+
+    // malloc(字节数)：在"堆"上向系统申请一块内存，返回起始地址；失败返回 NULL。
+    // sizeof(Node)：一个 Node 占多少字节。(Node *) 是强制类型转换，把地址转成"指向 Node 的指针"。
+    Node *new_node = (Node *)malloc(sizeof(Node));
+
+    // 申请可能失败（内存不足），失败时 malloc 返回 NULL，必须检查，否则后面访问 NULL 会崩溃。
+    if (new_node == NULL) {
+        printf("内存申请失败，程序结束。\n");
+
+        // exit 会立刻结束整个程序，不管现在在哪一层函数里（比 return 更彻底）。EXIT_FAILURE 表示"失败"。
+        // 这里选择直接退出，好处是调用者不用每次都检查"有没有创建成功"。
+        exit(EXIT_FAILURE);
+    }
+
+    // -> 叫"通过指针访问成员"：new_node->data 的意思是"new_node 指向的节点里的 data"。把传进来的数据存进去。
+    new_node->data = value;
+
+    // 新节点还没有下一个节点，所以 next 设为 NULL。
+    // 为什么必须设置？malloc 申请到的内存里是随机数据，next 如果是乱地址，之后遍历就会崩溃。
+    new_node->next = NULL;
+
+    // 成功创建一个节点，计数器加 1。++ 是"自增"，等价于 created_count = created_count + 1。
+    created_count++;
+
+    // 把新节点的地址交给调用者。内存在堆上，函数结束后不会消失，所以可以放心返回。
+    return new_node;
+}
+
+
+// --------------------------------------------------------------------
+// 第五部分：释放一个节点
+// --------------------------------------------------------------------
+// void 表示没有返回值。所有释放节点的操作都走这个函数，这样 freed_count 才不会漏记。
+void destroy_node(Node *node) {
+
+    // 如果传进来的是空指针，什么都不用做，直接返回。
+    if (node == NULL) {
+        // return; 用在 void 函数里，表示"提前结束这个函数"。
+        return;
+    }
+
+    // free(node)：把 malloc 借来的这块内存还给系统。free 之后不能再使用这个节点。
+    free(node);
+
+    // 成功释放一个节点，计数器加 1。
+    freed_count++;
+}
+
+
+// --------------------------------------------------------------------
+// 第六部分：头插 —— 把新节点插在链表最前面
+// --------------------------------------------------------------------
+// 参数：head 是链表的头指针，value 是新节点的数据。返回值：新的头指针。
+// 例：原链表 20 -> 30，头插 10，得到 10 -> 20 -> 30。头插不需要遍历，速度很快。
+// 注意：这个函数在本程序里只是定义了，测试里并没有调用它。
+Node *insert_head(Node *head, int value) {
+
+    // 先创建新节点。
+    Node *new_node = create_node(value);
+
+    // 让新节点的 next 指向原来的第一个节点。
+    // 顺序很重要：先让新节点"连上后面"，再去改头指针；反过来的话，原来的链表就找不到了。
+    new_node->next = head;
+
+    // 新节点成为新的头，把它的地址返回给调用者。
+    return new_node;
+}
+
+
+// --------------------------------------------------------------------
+// 第七部分：尾插 —— 把新节点插在链表末尾
+// --------------------------------------------------------------------
+// 参数：head 是头指针，value 是新节点的数据。返回值：新的头指针。
+// 为什么要返回头指针？如果原来是空链表，新节点就成了头，头指针变了；
+// 函数里改参数 head 不会影响 main 里的 head（值传递），所以通过返回值把"新的头"交给调用者：head = insert_tail(head, 20);
+Node *insert_tail(Node *head, int value) {
+
+    // 先创建新节点。
+    Node *new_node = create_node(value);
+
+    // 链表是空的：新节点就是第一个节点，也就是新的头，直接返回它。
+    if (head == NULL) {
+        return new_node;
+    }
+
+    // 链表不是空的：用游标 current 从头出发，去找最后一个节点。
+    Node *current = head;
+
+    // 注意条件是 current->next != NULL，而不是 current != NULL：我们要停在"最后一个节点"上（它的 next 是 NULL），
+    // 而不是走出链表。
+    // 例：链表是 20 -> 30：current 在 20，next 不是 NULL，走到 30；30 的 next 是 NULL，停在 30。
+    while (current->next != NULL) {
+        current = current->next;
+    }
+
+    // 把新节点挂在最后一个节点后面：最后一个节点的 next 从 NULL 变成新节点的地址。
+    current->next = new_node;
+
+    // 头没有变，返回原来的头指针。
+    return head;
+}
+
+
+// --------------------------------------------------------------------
+// 第八部分：按值删除 —— 删除第一个值等于 target 的节点
+// --------------------------------------------------------------------
+// 参数：head 是头指针；target 是要删除的值；is_deleted 是一个"输出参数"。
+//   int *is_deleted：指向调用者的一个 int 变量。函数通过它把"有没有删掉"告诉调用者（0 没有，1 有）。
+// 返回值：删除之后新的头指针（如果删的是头节点，头会变）。
+// 为什么既要返回值，又要输出参数？返回值已经用来交回"新的头指针"，
+// "是否删除成功"是另一个结果，只能通过指针参数带出去。
+Node *delete_by_value(Node *head, int target, int *is_deleted) {
+
+    // *is_deleted 的意思是"is_deleted 指向的那个变量"。先设成 0，表示默认"没删到"。
+    *is_deleted = 0;
+
+    // 空链表：什么都没有，没法删除，直接返回 NULL（头保持为空）。
+    if (head == NULL) {
+        return NULL;
+    }
+
+    // 情况 1：要删除的就是头节点。
+    if (head->data == target) {
+
+        // 先记住要删除的节点，因为马上要移动 head。
+        Node *to_delete = head;
+
+        // 头指针后移，指向第二个节点：原来的头节点就从链表里"脱离"了。
+        // 例：10 -> 20 -> 30，删除 10：head 变成指向 20 的节点。
+        head = head->next;
+
+        // 释放脱离出来的节点。注意顺序：先让 head 后移，再释放；如果先释放，就读不到 head->next 了。
+        destroy_node(to_delete);
+
+        // 通过输出参数告诉调用者：删除成功。
+        *is_deleted = 1;
+
+        // 返回新的头指针（第二个节点）。
+        return head;
+    }
+
+    // 情况 2：要删除的不是头节点。这时需要两个指针一前一后：
+    //   prev   ：前一个节点；
+    //   current：当前正在检查的节点。
+    // 为什么需要 prev？要删除 current，必须让它前一个节点的 next "绕过"它，指向 current 的下一个；
+    // 单链表不能回头，所以一路都要带着 prev。
+    Node *prev = head;
+
+    // 从第二个节点开始检查（头节点已经检查过，不是目标）。
+    Node *current = head->next;
+
+    // 只要还没走出链表，就继续往后找。
+    while (current != NULL) {
+
+        // 找到了目标节点。
+        if (current->data == target) {
+
+            // 关键一步：让前一个节点的 next 绕过 current，直接指向 current 的下一个节点。
+            // 例：20 -> 30 -> 40，删除 30：prev 是 20，current 是 30；执行后 20 的 next 指向 40，30 就从链表里脱离了。
+            prev->next = current->next;
+
+            // 把脱离出来的节点释放。必须在 prev->next 改好之后再释放。
+            destroy_node(current);
+
+            // 通知调用者：删除成功。
+            *is_deleted = 1;
+
+            // 头没有变，返回原来的头指针。找到之后立刻返回，所以只会删第一个匹配的节点，后面同值的节点保持不动。
+            return head;
+        }
+
+        // 这个节点不是目标：prev 和 current 同时往后挪一格，继续检查下一个。
+        prev = current;
+        current = current->next;
+    }
+
+    // 走完整条链表都没找到：不删除，is_deleted 保持 0，头指针不变。
+    return head;
+}
+
+
+// --------------------------------------------------------------------
+// 第九部分：释放整条链表
+// --------------------------------------------------------------------
+// 每个节点都是 malloc 申请的，用完必须逐个释放。返回 NULL，让调用者把头指针也设成 NULL。
+Node *free_list(Node *head) {
+
+    // 这里直接用参数 head 当游标往后走（它是函数内部的拷贝，改它不会影响 main 里的 head）。
+    while (head != NULL) {
+
+        // 先把"下一个节点的地址"保存起来！因为释放当前节点之后，就不能再访问它的 next 了。
+        Node *next_node = head->next;
+
+        // 释放当前节点。
+        destroy_node(head);
+
+        // 移到刚才保存的下一个节点。
+        head = next_node;
+    }
+
+    // 全部释放完，返回 NULL。调用者写 head = free_list(head);，这样 main 里的 head 也变成 NULL，不会留下"悬空指针"。
+    return NULL;
+}
+
+
+// --------------------------------------------------------------------
+// 第十部分：输出链表
+// --------------------------------------------------------------------
+void print_list(Node *head) {
+
+    // 用游标从头走到尾，不直接移动 head。
+    Node *current = head;
+
+    // 先输出开头的 head。
+    printf("head");
+
+    // 只要游标还没走出链表（不是 NULL），就继续循环。
+    while (current != NULL) {
+
+        // 输出一个箭头和当前节点的数据。
+        printf(" -> %d", current->data);
+
+        // 游标移到下一个节点：这是遍历链表的核心一步。
+        current = current->next;
+    }
+
+    // 走到末尾，输出 NULL 表示"到头了"，空链表时只会输出 head -> NULL。
+    printf(" -> NULL\n");
+}
+
+
+// --------------------------------------------------------------------
+// 第十一部分：统计节点个数
+// --------------------------------------------------------------------
+// 遍历一遍链表，每经过一个节点就数一个。
+int count_nodes(Node *head) {
+
+    // count 存节点个数，从 0 开始。
+    int count = 0;
+    Node *current = head;
+
+    while (current != NULL) {
+
+        // 每走到一个节点，计数加 1。
+        count++;
+
+        current = current->next;
+    }
+
+    // 把节点个数返回给调用者。
+    return count;
+}
+
+
+// --------------------------------------------------------------------
+// 第十二部分：检查内存是否"平衡"
+// --------------------------------------------------------------------
+// 逻辑：创建的节点数 - 释放的节点数，应该等于链表里现在实际有的节点数（count_nodes(head)）。
+// 不相等就说明有问题：有节点被"丢"了没释放（内存泄漏），或者重复释放了。
+// == 比较的结果是 1（真）或 0（假），所以函数可以直接 return 这个比较的结果。运算顺序：先算减法，再比较。
+int memory_ok(Node *head) { return created_count - freed_count == count_nodes(head); }
+
+
+// --------------------------------------------------------------------
+// 第十三部分：检查链表内容是否符合预期
+// --------------------------------------------------------------------
+// 把链表的内容和期望的数组逐个对比：个数和每个值都完全一致，返回 1；否则返回 0。
+// const int expected[] 是期望的数据数组，const 表示函数只读不改。
+int list_equals(Node *head, const int expected[], int expected_count) {
+
+    // 游标从链表头开始。
+    Node *current = head;
+
+    // i 从 0 数到 expected_count - 1，依次对比期望的每个数据。
+    for (int i = 0; i < expected_count; i++) {
+
+        // 两种不一致的情况：链表比期望的短（走到 NULL 了），或者当前节点的值不同。
+        // || 有"短路"特点：左边 current == NULL 成立时，右边的 current->data 不会被计算，避免访问 NULL 出错。
+        if (current == NULL || current->data != expected[i]) {
+            // 不一致，返回 0。
+            return 0;
+        }
+
+        // 对上了，游标走向下一个节点。
+        current = current->next;
+    }
+
+    // 期望的数据都对上之后，还要确认链表没有多余的节点：此时 current 必须是 NULL。
+    // 这个比较的结果（1 或 0）直接作为返回值。
+    return current == NULL;
+}
+
+
+// --------------------------------------------------------------------
+// 第十四部分：测试辅助函数 —— check
+// --------------------------------------------------------------------
+// check 是一个简单的"断言"函数：传入一个条件（真或假）和一段说明文字，
+// 条件成立输出 [通过]，不成立输出 [失败]，同时统计次数。
+// const char *description 是字符串参数（指向字符的指针）；字符串常量不能被修改，所以加 const。
+// 为什么写成函数？每一项检查都要输出一行并计数，写成函数就不用重复写。
+void check(int condition, const char *description) {
+
+    // 每调用一次，检查总数加 1。
+    total_checks++;
+
+    // C 语言里 0 是假，非 0 是真，所以可以直接写 if (condition)。
+    if (condition) {
+
+        // %s 是字符串的占位符，输出说明文字。
+        printf("[通过] %s\n", description);
+
+    } else {
+
+        printf("[失败] %s\n", description);
+
+        // 失败的检查数加 1。
+        failed_checks++;
+    }
+}
+
+
+// --------------------------------------------------------------------
+// 第十五部分：输出内存报告
+// --------------------------------------------------------------------
+void report_memory(void) {
+
+    // 这条 printf 的格式字符串被拆成了相邻的两段字符串，C 会自动把它们拼成一句。
+    // 三个 %d 依次对应：created_count（创建数）、freed_count（释放数）、created_count - freed_count（还没释放的数）。
+    printf("[内存报告] 创建 %d 个节点，释放 %d 个节点，"
+           "尚未释放 %d 个节点\n",
+           created_count, freed_count, created_count - freed_count);
+}
+
+
+// --------------------------------------------------------------------
+// 第十六部分：main 函数 —— 开始测试
+// --------------------------------------------------------------------
+int main(void) {
+
+    // head 是头指针，指向链表的第一个节点。NULL 表示"空链表"。
+    Node *head = NULL;
+
+    // 用来接收 delete_by_value 通过输出参数带回来的结果。
+    int is_deleted = 0;
+
+    // 记录"删除之前已经释放了多少个节点"。删除后拿现在的 freed_count 去对比，就能验证"这一次恰好释放了几个"。
+    int freed_before = 0;
+
+    printf("===== 开始测试 =====\n");
+
+    // --------------------------------------------------------------------
+    // 测试 1：在空链表里删除 10
+    // --------------------------------------------------------------------
+    printf("\n[测试 1] 空链表删除 10\n");
+
+    freed_before = freed_count;
+
+    // &is_deleted 是 is_deleted 的地址（& 叫取地址符），传进去后，函数就能把结果写回这个变量。
+    // 返回值接住新的头指针（这里仍然是 NULL）。
+    head = delete_by_value(head, 10, &is_deleted);
+
+    // 输出链表：此时应是 head -> NULL。
+    print_list(head);
+
+    check(is_deleted == 0, "空链表：没有删除任何节点");   // 期望：没有删除任何节点，所以 is_deleted 应该是 0
+    check(head == NULL, "空链表：头指针仍为 NULL");   // 期望：头指针仍然是 NULL
+    check(freed_count == freed_before, "空链表：没有释放节点");   // 期望：没有释放任何节点，释放次数不变
+    check(memory_ok(head), "空链表：内存计数平衡");   // 期望：创建数和释放数的差，等于链表里现有的节点数
+
+    // --------------------------------------------------------------------
+    // 准备数据：尾插 20、30、40、50
+    // --------------------------------------------------------------------
+    printf("\n[准备] 尾插 20、30、40、50\n");
+
+    // 尾插 20。必须写 head = ...，接住返回的新头指针（第一次插入时，头指针从 NULL 变成了新节点）。
+    // 下面依次尾插 30、40、50，链表变成：20 -> 30 -> 40 -> 50 -> NULL
+    head = insert_tail(head, 20);
+    head = insert_tail(head, 30);
+    head = insert_tail(head, 40);
+    head = insert_tail(head, 50);
+
+    print_list(head);
+
+    // 期望的内容数组，用来和链表对比。
+    int list_a[] = {20, 30, 40, 50};
+
+    // 把链表和期望数组 list_a（4 个元素）逐个对比，完全一致才算通过。
+    check(list_equals(head, list_a, 4), "尾插后链表应为 20 -> 30 -> 40 -> 50");
+
+    check(memory_ok(head), "尾插后：内存计数平衡");
+
+    // --------------------------------------------------------------------
+    // 测试 2：删除头节点 20
+    // --------------------------------------------------------------------
+    printf("\n[测试 2] 删除头节点 20\n");
+
+    // 记下删除之前的释放次数。
+    freed_before = freed_count;
+
+    // 删除头节点 20（对应"情况 1"）：头指针会变成指向 30 的节点，所以必须接住返回值。
+    head = delete_by_value(head, 20, &is_deleted);
+
+    print_list(head);
+
+    // 期望：删除之后链表是 30 -> 40 -> 50。
+    int list_b[] = {30, 40, 50};
+
+    check(is_deleted == 1, "删除头节点 20 应成功");   // 期望：删除成功，is_deleted 应该是 1
+
+    check(list_equals(head, list_b, 3), "删除后链表应为 30 -> 40 -> 50");   // 期望：链表内容是 30 -> 40 -> 50
+
+    check(freed_count == freed_before + 1, "删除头节点：恰好释放 1 个节点");   // 期望：这次恰好释放了 1 个节点（不多也不少）
+
+    check(memory_ok(head), "删除头节点后：内存计数平衡");   // 期望：内存计数依然平衡
+
+    // --------------------------------------------------------------------
+    // 测试 3：删除尾节点 50
+    // --------------------------------------------------------------------
+    printf("\n[测试 3] 删除尾节点 50\n");
+
+    freed_before = freed_count;
+
+    // 删除尾节点 50（对应"情况 2"：prev 是 40，current 是 50）：40 的 next 变成 NULL，头指针不变。
+    head = delete_by_value(head, 50, &is_deleted);
+
+    print_list(head);
+
+    // 期望：删除之后链表是 30 -> 40。
+    int list_c[] = {30, 40};
+
+    check(is_deleted == 1, "删除尾节点 50 应成功");
+
+    check(list_equals(head, list_c, 2), "删除后链表应为 30 -> 40");
+
+    check(freed_count == freed_before + 1, "删除尾节点：恰好释放 1 个节点");
+
+    check(memory_ok(head), "删除尾节点后：内存计数平衡");
+
+    // --------------------------------------------------------------------
+    // 测试 4：删除不存在的值 99
+    // --------------------------------------------------------------------
+    printf("\n[测试 4] 删除不存在的值 99\n");
+
+    freed_before = freed_count;
+
+    // 整条链表里找不到 99：不删除任何节点，is_deleted 保持 0，链表和释放次数都不变。
+    head = delete_by_value(head, 99, &is_deleted);
+
+    print_list(head);
+
+    check(is_deleted == 0, "找不到 99：删除应失败");   // 期望：删除失败，is_deleted 是 0
+
+    check(list_equals(head, list_c, 2), "找不到 99：链表保持 30 -> 40 不变");   // 期望：链表保持 30 -> 40 不变
+
+    check(freed_count == freed_before, "找不到 99：释放次数不变");
+
+    check(memory_ok(head), "删除不存在的值后：内存计数平衡");
+
+    // --------------------------------------------------------------------
+    // 测试 5：把剩余节点删光，最后删除唯一的节点 40
+    // --------------------------------------------------------------------
+    printf("\n[测试 5] 删除剩余节点，最终删除唯一节点 40\n");
+
+    // 先删除 30（此时它是头节点），链表剩下 40 一个节点。
+    head = delete_by_value(head, 30, &is_deleted);
+
+    check(is_deleted == 1, "删除节点 30 应成功");
+
+    freed_before = freed_count;
+
+    // 再删除 40：此时它既是头节点，也是最后一个节点。删除后 head 变成它的 next，也就是 NULL，链表变空。
+    head = delete_by_value(head, 40, &is_deleted);
+
+    print_list(head);
+
+    check(is_deleted == 1, "删除唯一节点 40 应成功");
+    check(head == NULL, "删除唯一节点后，链表为空");   // 期望：删光之后链表为空，头指针是 NULL
+    check(freed_count == freed_before + 1, "删除唯一节点：恰好释放 1 个节点");
+    check(memory_ok(head), "空链表：内存计数平衡");
+
+    // --------------------------------------------------------------------
+    // 测试 6：重复的值 —— 链表 5、7、5，删除 5 时只删第一个
+    // --------------------------------------------------------------------
+    printf("\n[测试 6] 重复值：5、7、5 中只删除第一个 5\n");
+
+    // 重新往空链表里尾插 5、7、5，得到 5 -> 7 -> 5 -> NULL。
+    head = insert_tail(head, 5);
+    head = insert_tail(head, 7);
+    head = insert_tail(head, 5);
+
+    print_list(head);
+
+    freed_before = freed_count;
+
+    // 删除 5：只会删除"第一个"值为 5 的节点（头节点），第二个 5 保留。
+    head = delete_by_value(head, 5, &is_deleted);
+
+    print_list(head);
+
+    // 期望：删除之后链表是 7 -> 5。
+    int list_d[] = {7, 5};
+
+    check(is_deleted == 1, "删除第一个值为 5 的节点应成功");
+
+    check(list_equals(head, list_d, 2), "删除后链表应为 7 -> 5，第二个 5 仍然保留");   // 期望：7 -> 5，第二个 5 还在
+
+    check(freed_count == freed_before + 1, "重复值测试：恰好释放 1 个节点");
+
+    check(memory_ok(head), "重复值测试后：内存计数平衡");
+
+    // --------------------------------------------------------------------
+    // 收尾：释放全部节点，并做最后的内存检查
+    // --------------------------------------------------------------------
+    printf("\n[收尾] 释放所有剩余节点\n");
+
+    // 释放整条链表，并用返回的 NULL 更新 head，避免留下"悬空指针"。
+    head = free_list(head);
+
+    print_list(head);
+
+    check(head == NULL, "释放整条链表后，head 为 NULL");   // 期望：释放之后 head 是 NULL
+
+    // 最终检查：创建的节点数必须等于释放的节点数；相等就说明没有内存泄漏。
+    check(created_count == freed_count, "创建和释放次数相等，没有遗留未释放节点");
+
+    // 输出内存报告：创建了多少、释放了多少、还有多少没释放（应为 0）。
+    report_memory();
+
+    // total_checks 是检查总数，failed_checks 是失败的项数。
+    printf("\n测试合计：%d 项，失败：%d 项\n", total_checks, failed_checks);
+
+    // 只要有失败项，就以"出错"状态（返回 1）结束程序；这样别的程序或脚本可以通过退出码知道测试有没有通过。
+    if (failed_checks > 0) {
+        return 1;
+    }
+
+    printf("\n===== 所有测试通过，测试结束 =====\n");
+
+    // return 0：结束 main，把 0 交给系统，表示"程序正常结束"。
+    return 0;
+}
+
+// ====================================================================
+// 完整的预期输出（我在电脑上实际运行过，应该与下面完全一致）：
+//   ===== 开始测试 =====
+//
+//   [测试 1] 空链表删除 10
+//   head -> NULL
+//   [通过] 空链表：没有删除任何节点
+//   [通过] 空链表：头指针仍为 NULL
+//   [通过] 空链表：没有释放节点
+//   [通过] 空链表：内存计数平衡
+//
+//   [准备] 尾插 20、30、40、50
+//   head -> 20 -> 30 -> 40 -> 50 -> NULL
+//   [通过] 尾插后链表应为 20 -> 30 -> 40 -> 50
+//   [通过] 尾插后：内存计数平衡
+//
+//   [测试 2] 删除头节点 20
+//   head -> 30 -> 40 -> 50 -> NULL
+//   [通过] 删除头节点 20 应成功
+//   [通过] 删除后链表应为 30 -> 40 -> 50
+//   [通过] 删除头节点：恰好释放 1 个节点
+//   [通过] 删除头节点后：内存计数平衡
+//
+//   [测试 3] 删除尾节点 50
+//   head -> 30 -> 40 -> NULL
+//   [通过] 删除尾节点 50 应成功
+//   [通过] 删除后链表应为 30 -> 40
+//   [通过] 删除尾节点：恰好释放 1 个节点
+//   [通过] 删除尾节点后：内存计数平衡
+//
+//   [测试 4] 删除不存在的值 99
+//   head -> 30 -> 40 -> NULL
+//   [通过] 找不到 99：删除应失败
+//   [通过] 找不到 99：链表保持 30 -> 40 不变
+//   [通过] 找不到 99：释放次数不变
+//   [通过] 删除不存在的值后：内存计数平衡
+//
+//   [测试 5] 删除剩余节点，最终删除唯一节点 40
+//   [通过] 删除节点 30 应成功
+//   head -> NULL
+//   [通过] 删除唯一节点 40 应成功
+//   [通过] 删除唯一节点后，链表为空
+//   [通过] 删除唯一节点：恰好释放 1 个节点
+//   [通过] 空链表：内存计数平衡
+//
+//   [测试 6] 重复值：5、7、5 中只删除第一个 5
+//   head -> 5 -> 7 -> 5 -> NULL
+//   head -> 7 -> 5 -> NULL
+//   [通过] 删除第一个值为 5 的节点应成功
+//   [通过] 删除后链表应为 7 -> 5，第二个 5 仍然保留
+//   [通过] 重复值测试：恰好释放 1 个节点
+//   [通过] 重复值测试后：内存计数平衡
+//
+//   [收尾] 释放所有剩余节点
+//   head -> NULL
+//   [通过] 释放整条链表后，head 为 NULL
+//   [通过] 创建和释放次数相等，没有遗留未释放节点
+//   [内存报告] 创建 7 个节点，释放 7 个节点，尚未释放 0 个节点
+//
+//   测试合计：29 项，失败：0 项
+//
+//   ===== 所有测试通过，测试结束 =====
+// ====================================================================
+*/

@@ -1,127 +1,229 @@
-# 文件用途：本文件围绕“题目1和2 输入版 逐行注释”展开。
-# 核心知识点：列表与字典、函数、循环、分支判断、异常处理。
-# 基本流程：根据代码中的输入或初始数据，按条件、循环和函数调用完成处理，再输出结果。
-# 输入：从标准输入读取数据或由调用者传入参数。输出：通过控制台打印处理结果。
-# 阅读提醒：异常分支是否覆盖所有错误情况，应结合具体输入和运行环境判断。
-# 模块依赖：json, pathlib。
-# 导入 json 模块，为后面保存 JSON 数据做准备。  # 导入 JSON 工具
-import json  # 当前示例暂时没有使用它
+import json
 
-# 从 pathlib 模块导入 Path，为后面处理文件路径做准备。  # 导入路径工具
-from pathlib import Path  # 当前示例暂时没有使用它
+from pathlib import Path
 
-# 取得当前 Python 文件所在的文件夹路径。  # 设置基础目录
-BASE_DIR = Path(__file__).resolve().parent  # 注意 file 两边各有两个下划线
+BASE_DIR = Path(__file__).resolve().parent
 
-# 组合出学生成绩示例文本文件的完整路径。  # 设置文本文件路径
-TEXT_FILE = BASE_DIR / "学生成绩示例.txt"  # / 用来连接文件夹和文件名
+TEXT_FILE = BASE_DIR / "学生成绩示例.txt"
 
-# 组合出学生信息 JSON 文件的完整路径。  # 设置 JSON 文件路径
-JSON_FILE = BASE_DIR / "学生信息.json"  # 保存 JSON 时会使用这个路径
+JSON_FILE = BASE_DIR / "学生信息.json"
 
 
-# 定义求最大值的函数。  # 开始定义 find_max
-def find_max(numbers):  # numbers 接收数字列表
-    # 判断列表是否为空。  # 检查列表长度
-    if len(numbers) == 0:  # len 返回列表元素个数
-        # 列表为空时主动报错。  # 抛出异常
-        raise ValueError("列表不能为空")  # 避免访问不存在的第一个元素
+def find_max(numbers):
+    if len(numbers) == 0:
+        raise ValueError("列表不能为空")
 
-    # 先把第一个数字当作最大值。  # 设置最大值
-    max_number = numbers[0]  # 下标 0 表示第一个元素
+    max_number = numbers[0]
 
-    # 逐个检查列表中的数字。  # 遍历数字列表
-    for number in numbers:  # number 是当前数字
-        # 判断当前数字是否更大。  # 比较大小
-        if number > max_number:  # > 表示大于
-            # 保存新的最大值。  # 更新最大值
-            max_number = number  # 把更大的数字保存起来
+    for number in numbers:
+        if number > max_number:
+            max_number = number
 
-    # 返回最终找到的最大值。  # 返回结果
-    return max_number  # 把结果交给函数调用处
+    return max_number
 
 
-# 定义求最小值的函数。  # 开始定义 find_min
-def find_min(numbers):  # numbers 接收数字列表
-    # 判断列表是否为空。  # 检查列表长度
-    if len(numbers) == 0:  # len 返回列表元素个数
-        # 列表为空时主动报错。  # 抛出异常
-        raise ValueError("列表不能为空")  # 避免访问不存在的第一个元素
+def find_min(numbers):
+    if len(numbers) == 0:
+        raise ValueError("列表不能为空")
 
-    # 先把第一个数字当作最小值。  # 设置最小值
-    min_number = numbers[0]  # 下标 0 表示第一个元素
+    min_number = numbers[0]
 
-    # 逐个检查列表中的数字。  # 遍历数字列表
-    for number in numbers:  # number 是当前数字
-        # 判断当前数字是否更小。  # 比较大小
-        if number < min_number:  # < 表示小于
-            # 保存新的最小值。  # 更新最小值
-            min_number = number  # 把更小的数字保存起来
+    for number in numbers:
+        if number < min_number:
+            min_number = number
 
-    # 返回最终找到的最小值。  # 返回结果
-    return min_number  # 把结果交给函数调用处
+    return min_number
 
 
-# 定义计算平均值的函数。  # 开始定义 average
-def average(numbers):  # average 才是正确拼写
-    # 判断列表是否为空。  # 检查列表长度
-    if len(numbers) == 0:  # 空列表不能计算平均值
-        # 列表为空时主动报错。  # 抛出异常
-        raise ValueError("列表不能为空")  # 停止函数继续执行
+def average(numbers):
+    if len(numbers) == 0:
+        raise ValueError("列表不能为空")
 
-    # 创建总和变量，初始值为 0。  # 设置总和
-    total = 0  # total 用来累加所有数字
+    total = 0
 
-    # 逐个取出列表中的数字。  # 遍历数字列表
-    for number in numbers:  # number 是当前数字
-        # 把当前数字累加到总和里。  # 累加数字
-        total += number  # += 表示在原值基础上增加
+    for number in numbers:
+        total += number
 
-    # 用总和除以数字个数，并返回结果。  # 计算平均值
-    return total / len(numbers)  # / 表示普通除法
+    return total / len(numbers)
 
 
-# 定义统计及格人数的函数。  # 开始定义 count_pass
-def count_pass(numbers):  # 这里必须接收 numbers 参数
-    # 判断列表是否为空。  # 检查列表长度
-    if len(numbers) == 0:  # 注意这里写 numbers，不是 number
-        # 列表为空时主动报错。  # 抛出异常
-        raise ValueError("列表不能为空")  # 停止函数继续执行
+def count_pass(numbers):
+    if len(numbers) == 0:
+        raise ValueError("列表不能为空")
 
-    # 创建及格人数计数器。  # 设置计数器
-    count = 0  # 一开始及格人数是 0
+    count = 0
 
-    # 逐个检查每个数字。  # 遍历数字列表
-    for number in numbers:  # number 是当前成绩
-        # 判断成绩是否大于或等于 60。  # 判断是否及格
-        if number >= 60:  # >= 表示大于或等于
-            # 及格人数增加 1。  # 累加人数
-            count += 1  # 把 count 原来的值加 1
+    for number in numbers:
+        if number >= 60:
+            count += 1
 
-    # 返回最终的及格人数。  # 返回统计结果
-    return count  # 把人数交给函数调用处
+    return count
 
 
-# 创建空列表保存用户输入的数字。  # 创建数字列表
-numbers = []  # [] 表示空列表
+numbers = []
 
-# 循环 5 次，让用户输入 5 个数字。  # 开始输入循环
-for index in range(5):  # index 会依次是 0、1、2、3、4
-    # 显示提示并读取用户输入的数字。  # 获取用户输入
-    number = int(input(f"请输入第 {index + 1} 个数字："))  # int 把文字转换成整数
+for index in range(5):
+    number = int(input(f"请输入第 {index + 1} 个数字："))
 
-    # 把输入的数字添加到列表末尾。  # 保存输入数字
-    numbers.append(number)  # append 用来添加列表元素
+    numbers.append(number)
 
 
-# 调用函数求最小值并输出。  # 输出最小值
-print("最小值是：", find_min(numbers))  # 先调用 find_min，再显示结果
+print("最小值是：", find_min(numbers))
 
-# 调用函数求最大值并输出。  # 输出最大值
-print("最大值是：", find_max(numbers))  # 先调用 find_max，再显示结果
+print("最大值是：", find_max(numbers))
 
-# 调用函数统计及格人数并输出。  # 输出及格人数
-print("及格人数是：", count_pass(numbers))  # 把列表传给 count_pass
+print("及格人数是：", count_pass(numbers))
 
-# 调用函数计算平均分并输出。  # 输出平均分
-print("平均分是：", average(numbers))  # 把列表传给 average
+print("平均分是：", average(numbers))
+# # ====================================================================
+# # 文件名：05_2026-09-13_题目1和2_输入版_逐行注释.py
+# # 作用：题目 1 和题目 2 的"输入版"：从键盘输入 5 个整数，用函数求出：
+# #       最小值、最大值、及格人数（≥ 60 分）、平均分。
+# #       说明：文件开头引入的 json、Path 以及 BASE_DIR、TEXT_FILE、JSON_FILE，
+# #             在这个文件里并没有用到（是从别的练习里带过来的），不影响运行。
+# #
+# # 怎么运行（在 Mac 终端里，先 cd 到这个文件所在的文件夹）：
+# #   运行：python3 "05_2026-09-13_题目1和2_输入版_逐行注释.py"
+# #   说明：Python 是边读边执行的，不需要先编译。
+# # ====================================================================
+#
+#
+# # --------------------------------------------------------------------
+# # 第一部分：引入工具，设置文件路径
+# # --------------------------------------------------------------------
+# # import json：引入 Python 自带的 json 工具箱，用来保存 / 读取 JSON 文件（一种常见的、人也能读的数据格式）。
+# import json
+#
+# # Path 是"路径"工具，用来方便地表示文件和文件夹的位置。
+# from pathlib import Path
+#
+# # __file__ 是"当前这个 .py 文件的路径"；.resolve() 变成完整路径；.parent 取它所在的文件夹。
+# # 所以 BASE_DIR 就是"这个程序所在的文件夹"，不管你在哪里运行程序，都能找到和它放在一起的数据文件。
+# BASE_DIR = Path(__file__).resolve().parent
+#
+# # 路径对象可以用 / 拼接："文件夹 / 文件名"就得到文件的完整路径。全部大写的变量名，是"常量"的习惯写法。
+# TEXT_FILE = BASE_DIR / "学生成绩示例.txt"
+#
+# # 这一行同样定义了一个文件路径，但本文件没有用到它。
+# JSON_FILE = BASE_DIR / "学生信息.json"
+#
+#
+# # --------------------------------------------------------------------
+# # 第二部分：函数 —— 求最大值
+# # --------------------------------------------------------------------
+# # def 函数名(参数): 用来定义函数 = 一段有名字、可以反复使用的代码。numbers 是参数：调用时传进来的数字列表。
+# def find_max(numbers):
+#     # len(列表) 返回元素个数。是 0 说明列表为空，没有最大值可言。
+#     if len(numbers) == 0:
+#         # raise 的意思是"主动抛出一个错误"：遇到不合理的数据，直接报错停下。
+#         raise ValueError("列表不能为空")
+#
+#     # "打擂台"：先假设第一个数最大（下标从 0 开始）。
+#     max_number = numbers[0]
+#
+#     # for 变量 in 列表: 让 number 依次取列表里的每一个元素。
+#     # 这里从第一个元素开始比（和自己比一次也没关系，结果不变）。
+#     for number in numbers:
+#         # 比当前最大值大，就更新。
+#         if number > max_number:
+#             max_number = number
+#
+#     # return 把结果交回给调用者。
+#     return max_number
+#
+#
+# # --------------------------------------------------------------------
+# # 第三部分：函数 —— 求最小值
+# # --------------------------------------------------------------------
+# # 和 find_max 对称：先假设第一个最小，遇到更小的就更新。
+# def find_min(numbers):
+#     if len(numbers) == 0:
+#         raise ValueError("列表不能为空")
+#
+#     min_number = numbers[0]
+#
+#     for number in numbers:
+#         if number < min_number:
+#             min_number = number
+#
+#     return min_number
+#
+#
+# # --------------------------------------------------------------------
+# # 第四部分：函数 —— 求平均分
+# # --------------------------------------------------------------------
+# def average(numbers):
+#     if len(numbers) == 0:
+#         raise ValueError("列表不能为空")
+#
+#     # total 存总和，从 0 开始累加。
+#     total = 0
+#
+#     # 把每个数都加进 total。
+#     for number in numbers:
+#         # += 是"加上再赋值"：total += number 等价于 total = total + number。
+#         total += number
+#
+#     # 总和 ÷ 个数 = 平均分。/ 是除法，结果是小数。
+#     return total / len(numbers)
+#
+#
+# # --------------------------------------------------------------------
+# # 第五部分：函数 —— 统计及格人数
+# # --------------------------------------------------------------------
+# def count_pass(numbers):
+#     if len(numbers) == 0:
+#         raise ValueError("列表不能为空")
+#
+#     # count 是"计数器"，从 0 开始。
+#     count = 0
+#
+#     for number in numbers:
+#         # >= 是"大于或等于"：60 分及以上算及格。
+#         if number >= 60:
+#             # 及格就让计数器加 1。
+#             count += 1
+#
+#     return count
+#
+#
+# # --------------------------------------------------------------------
+# # 第六部分：主程序 —— 输入 5 个数，调用函数输出结果
+# # --------------------------------------------------------------------
+# # [] 是"空列表"，numbers 用来存输入的 5 个整数。
+# numbers = []
+#
+# # range(5) 生成 0、1、2、3、4，所以循环执行 5 次，index 依次取这 5 个值。
+# for index in range(5):
+#     # input(提示语)：显示提示语，等用户输入并按回车，得到字符串；int(...) 把它转成整数。输入的不是整数会报错中断。
+#     # f"..." 叫 f-string：里面的 {index + 1} 会被替换成值：index 从 0 开始，显示给人看的编号从 1 开始，所以加 1。
+#     number = int(input(f"请输入第 {index + 1} 个数字："))
+#
+#     # 列表.append(元素)：把元素添加到列表末尾。
+#     numbers.append(number)
+#
+#
+# # 调用函数，把返回值直接交给 print 输出。print 里用逗号隔开多个内容，会依次输出，中间自动加一个空格。
+# print("最小值是：", find_min(numbers))
+#
+# print("最大值是：", find_max(numbers))
+#
+# # 例：85、92、56、78、60 里，56 不及格，其余 4 个及格，所以是 4。
+# print("及格人数是：", count_pass(numbers))
+#
+# print("平均分是：", average(numbers))
+#
+# # ====================================================================
+# # 测试时依次输入（每行输完按一次回车）：
+# #   85
+# #   92
+# #   56
+# #   78
+# #   60
+# #
+# # 完整的预期输出（我在电脑上实际运行过，应该与下面完全一致）：
+# #   请输入第 1 个数字：请输入第 2 个数字：请输入第 3 个数字：请输入第 4 个数字：请输入第 5 个数字：最小值是： 56
+# #   最大值是： 92
+# #   及格人数是： 4
+# #   平均分是： 74.2
+# # ====================================================================

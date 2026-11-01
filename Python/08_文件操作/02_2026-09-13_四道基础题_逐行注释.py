@@ -1,141 +1,277 @@
-# 文件用途：本文件围绕“四道基础题 逐行注释”展开。
-# 核心知识点：字符串、函数、循环、分支判断、文件读写、异常处理。
-# 基本流程：根据代码中的输入或初始数据，按条件、循环和函数调用完成处理，再输出结果。
-# 输入：本文件使用预设数据、初始化值或函数参数。输出：通过控制台打印结果。 文件操作：代码中包含文件读写相关逻辑，运行时需留意路径、权限和文件内容。
-# 阅读提醒：检查列表/序列的下标范围、字符串处理结果及空数据情况。 异常分支是否覆盖所有错误情况，应结合具体输入和运行环境判断。
-# 模块依赖：json, pathlib。
-# 导入 json 模块，用它把 Python 数据保存成 JSON 格式。  # 导入 JSON 工具
-import json  # 使用 json 模块提供的功能
+import json
 
-# 从 pathlib 模块导入 Path，用它表示文件和文件夹路径。  # 导入路径工具
-from pathlib import Path  # 使用 Path 类处理路径
+from pathlib import Path
 
-# 找到当前这个 Python 文件所在的文件夹，并转换成绝对路径。  # 取得脚本目录
-BASE_DIR = Path(__file__).resolve().parent  # __file__ 是当前脚本的文件名
+BASE_DIR = Path(__file__).resolve().parent
 
-# 组合出“学生成绩示例.txt”的完整路径。  # 准备文本文件路径
-TEXT_FILE = BASE_DIR / "学生成绩示例.txt"  # / 可以连接文件夹和文件名
+TEXT_FILE = BASE_DIR / "学生成绩示例.txt"
 
-# 组合出“学生信息.json”的完整路径。  # 准备 JSON 文件路径
-JSON_FILE = BASE_DIR / "学生信息.json"  # 保存 JSON 时使用这个路径
+JSON_FILE = BASE_DIR / "学生信息.json"
 
 
-# 定义题目 1 的函数，numbers 表示调用函数时传进来的列表。  # 定义求最大值函数
-def find_max(numbers):  # numbers 是函数的形式参数
-    # 判断列表中是否一个元素都没有。  # 检查空列表
-    if len(numbers) == 0:  # len(numbers) 得到列表长度
-        # 如果列表为空，就主动报错，防止后面访问第一个元素时出错。  # 报告错误
-        raise ValueError("列表不能为空")  # ValueError 表示数值或数据不合适
+def find_max(numbers):
+    if len(numbers) == 0:
+        raise ValueError("列表不能为空")
 
-    # 先把第一个数字当成目前看到的最大值。  # 设置初始最大值
-    max_number = numbers[0]  # 列表下标从 0 开始
+    max_number = numbers[0]
 
-    # 从第二个数字开始，逐个取出列表中的数字。  # 遍历剩余数字
-    for number in numbers[1:]:  # numbers[1:] 表示从第 2 个元素到末尾
-        # 判断当前数字是否比已经记录的最大值更大。  # 比较大小
-        if number > max_number:  # > 表示“大于”
-            # 如果更大，就更新目前记录的最大值。  # 更新最大值
-            max_number = number  # 把更大的数字保存起来
+    for number in numbers[1:]:
+        if number > max_number:
+            max_number = number
 
-    # 把找到的最大值交还给调用函数的地方。  # 返回结果
-    return max_number  # return 表示函数的结果
+    return max_number
 
 
-# 定义题目 2 的函数，scores 表示成绩列表。  # 定义成绩统计函数
-def count_scores(scores):  # scores 是函数的形式参数
-    # 调用题目 1 的函数，找出成绩最大值。  # 计算最大值
-    maximum = find_max(scores)  # 把函数结果保存到 maximum
+def count_scores(scores):
+    maximum = find_max(scores)
 
-    # 使用 Python 内置的 min 函数找出最小值。  # 计算最小值
-    minimum = min(scores)  # min 会返回列表中的最小元素
+    minimum = min(scores)
 
-    # 计算所有成绩的总和，再除以成绩个数，得到平均值。  # 计算平均值
-    average = sum(scores) / len(scores)  # / 表示普通除法
+    average = sum(scores) / len(scores)
 
-    # 及格人数一开始是 0 人。  # 设置及格人数初始值
-    pass_count = 0  # 计数器从 0 开始
+    pass_count = 0
 
-    # 逐个取出每一个成绩。  # 遍历全部成绩
-    for score in scores:  # 每循环一次，score 就是其中一个成绩
-        # 判断这个成绩是否大于或等于 60 分。  # 判断是否及格
-        if score >= 60:  # >= 表示“大于或等于”
-            # 如果及格，就让及格人数增加 1。  # 增加及格人数
-            pass_count = pass_count + 1  # 把原人数加 1 后保存回去
+    for score in scores:
+        if score >= 60:
+            pass_count = pass_count + 1
 
-    # 一次返回四个统计结果，外层会用四个变量分别接收。  # 返回全部统计结果
-    return maximum, minimum, average, pass_count  # 逗号隔开后形成元组
+    return maximum, minimum, average, pass_count
 
 
-# 定义题目 3 的函数，file_path 表示要读取的文件路径。  # 定义读取文本函数
-def read_text_file(file_path):  # file_path 是文件所在位置
-    # 打开文件："r" 表示只读，encoding="utf-8" 表示按 UTF-8 编码读取中文。  # 打开文本文件
-    with open(file_path, "r", encoding="utf-8") as file:  # with 会在用完后自动关闭文件
-        # 读取文件里的全部文字，并保存到 content 变量中。  # 读取全部内容
-        content = file.read()  # read() 返回整个文件的字符串
+def read_text_file(file_path):
+    with open(file_path, "r", encoding="utf-8") as file:
+        content = file.read()
 
-    # 把读取到的文字返回给调用函数的地方。  # 返回文件内容
-    return content  # 函数外部可以接收这段文字
+    return content
 
 
-# 定义题目 4 的函数，students 是学生列表，file_path 是保存位置。  # 定义保存 JSON 函数
-def save_students_to_json(students, file_path):  # students 保存多个学生字典
-    # 以写入模式打开 JSON 文件，"w" 表示写入；文件不存在时会自动创建。  # 打开 JSON 文件
-    with open(file_path, "w", encoding="utf-8") as file:  # 每次运行都会重写这个文件
-        # 把 students 数据写成 JSON；ensure_ascii=False 可以保留中文。  # 写入 JSON 内容
-        json.dump(students, file, ensure_ascii=False, indent=4)  # indent=4 让内容更易读
+def save_students_to_json(students, file_path):
+    with open(file_path, "w", encoding="utf-8") as file:
+        json.dump(students, file, ensure_ascii=False, indent=4)
 
 
-# 准备题目 2 要统计的成绩列表。  # 创建成绩列表
-scores = [78, 90, 45, 88, 92, 56]  # 方括号表示列表
+scores = [78, 90, 45, 88, 92, 56]
 
-# 调用统计函数，并用四个变量接收返回的四个结果。  # 调用统计函数
-maximum, minimum, average, pass_count = count_scores(scores)  # 左边按顺序接收四个结果
+maximum, minimum, average, pass_count = count_scores(scores)
 
-# 显示题目 2 标题。  # 输出题目 2 标题
-print("题目 2：成绩统计")  # print 会把括号里的内容显示到屏幕
+print("题目 2：成绩统计")
 
-# 显示最大值。  # 输出最大值
-print(f"最大值：{maximum}")  # f 字符串可以把变量放进大括号中
+print(f"最大值：{maximum}")
 
-# 显示最小值。  # 输出最小值
-print(f"最小值：{minimum}")  # 花括号里的变量会被替换成实际数值
+print(f"最小值：{minimum}")
 
-# 显示平均值，并保留两位小数。  # 输出平均值
-print(f"平均值：{average:.2f}")  # .2f 表示保留两位小数
+print(f"平均值：{average:.2f}")
 
-# 显示及格人数。  # 输出及格人数
-print(f"及格人数：{pass_count}")  # 把计数结果显示出来
+print(f"及格人数：{pass_count}")
 
-# 显示题目 3 标题。  # 输出题目 3 标题
-print("\n题目 3：读取文本文件")  # \n 表示先换一行
+print("\n题目 3：读取文本文件")
 
-# 调用读取函数，读取同目录下的示例文本文件。  # 调用读取文件函数
-text_content = read_text_file(TEXT_FILE)  # 把读取结果保存到 text_content
+text_content = read_text_file(TEXT_FILE)
 
-# 显示从文件中读到的全部内容。  # 输出文件内容
-print(text_content)  # 打印文本字符串
+print(text_content)
 
-# 准备题目 4 要保存的学生信息列表。  # 创建学生信息列表
-students = [  # 列表里有多个学生字典
-    {  # 创建第一个学生字典
-        "姓名": "小明",  # 保存姓名
-        "年龄": 18,  # 保存年龄
-        "成绩": 92.5,  # 保存成绩
-    },  # 第一个学生结束
-    {  # 创建第二个学生字典
-        "姓名": "小红",  # 保存姓名
-        "年龄": 19,  # 保存年龄
-        "成绩": 88.0,  # 保存成绩
-    },  # 第二个学生结束
-    {  # 创建第三个学生字典
-        "姓名": "小刚",  # 保存姓名
-        "年龄": 18,  # 保存年龄
-        "成绩": 76.5,  # 保存成绩
-    },  # 第三个学生结束
-]  # 学生列表结束
+students = [
+    {
+        "姓名": "小明",
+        "年龄": 18,
+        "成绩": 92.5,
+    },
+    {
+        "姓名": "小红",
+        "年龄": 19,
+        "成绩": 88.0,
+    },
+    {
+        "姓名": "小刚",
+        "年龄": 18,
+        "成绩": 76.5,
+    },
+]
 
-# 调用保存函数，把学生信息写入 JSON 文件。  # 调用保存 JSON 函数
-save_students_to_json(students, JSON_FILE)  # 传入学生数据和保存路径
+save_students_to_json(students, JSON_FILE)
 
-# 显示题目 4 的完成提示和保存位置。  # 输出保存成功信息
-print(f"\n题目 4：学生信息已保存到 {JSON_FILE}")  # \n 表示先换行
+print(f"\n题目 4：学生信息已保存到 {JSON_FILE}")
+# # ====================================================================
+# # 文件名：02_2026-09-13_四道基础题_逐行注释.py
+# # 作用：四道基础题里的三道（题目 2、3、4）：
+# #       题目 2：成绩统计 —— 最大值、最小值、平均值、及格人数
+# #       题目 3：读取文本文件"学生成绩示例.txt"并输出
+# #       题目 4：把学生信息（列表里放字典）保存成 JSON 文件"学生信息.json"
+# #       ⚠ 注意：运行这个程序会覆盖同文件夹里原来的"学生信息.json"。
+# #
+# # 怎么运行（在 Mac 终端里，先 cd 到这个文件所在的文件夹）：
+# #   运行：python3 "02_2026-09-13_四道基础题_逐行注释.py"
+# #   说明：Python 是边读边执行的，不需要先编译。
+# # ====================================================================
+#
+#
+# # --------------------------------------------------------------------
+# # 第一部分：引入工具，设置文件路径
+# # --------------------------------------------------------------------
+# # import json：引入 Python 自带的 json 工具箱，用来保存 / 读取 JSON 文件（一种常见的、人也能读的数据格式）。
+# import json
+#
+# # Path 是"路径"工具，用来方便地表示文件和文件夹的位置。
+# from pathlib import Path
+#
+# # __file__ 是"当前这个 .py 文件的路径"；.resolve() 变成完整路径；.parent 取它所在的文件夹。
+# # 所以 BASE_DIR 就是"这个程序所在的文件夹"，不管你在哪里运行程序，都能找到和它放在一起的数据文件。
+# BASE_DIR = Path(__file__).resolve().parent
+#
+# # 路径对象可以用 / 拼接："文件夹 / 文件名"就得到文件的完整路径。全部大写的变量名，是"常量"的习惯写法。
+# TEXT_FILE = BASE_DIR / "学生成绩示例.txt"
+#
+# JSON_FILE = BASE_DIR / "学生信息.json"
+#
+#
+# # --------------------------------------------------------------------
+# # 第二部分：函数 —— 求最大值
+# # --------------------------------------------------------------------
+# # def 函数名(参数): 用来定义函数 = 一段有名字、可以反复使用的代码。numbers 是参数：调用时传进来的数字列表。
+# def find_max(numbers):
+#     # len(列表) 返回元素个数。是 0 说明列表为空，没有最大值可言。
+#     if len(numbers) == 0:
+#         # raise 的意思是"主动抛出一个错误"：遇到不合理的数据，直接报错停下，比悄悄给出错误结果更好。
+#         raise ValueError("列表不能为空")
+#
+#     # "打擂台"：先假设第一个数最大（下标从 0 开始）。
+#     max_number = numbers[0]
+#
+#     # numbers[1:] 叫"切片"：取从下标 1 开始到末尾的所有元素（跳过第一个，它已经当作最大值了）。
+#     # for 变量 in 列表: 让 number 依次取每一个元素。
+#     for number in numbers[1:]:
+#         # 比当前最大值大，就更新。
+#         if number > max_number:
+#             max_number = number
+#
+#     # return 把结果交回给调用者。
+#     return max_number
+#
+#
+# # --------------------------------------------------------------------
+# # 第三部分：函数 —— 统计成绩
+# # --------------------------------------------------------------------
+# # 统计成绩，一次返回 4 个结果：最大值、最小值、平均值、及格人数。
+# def count_scores(scores):
+#     # 调用上面写好的 find_max 函数求最大值：函数可以调用别的函数，不用重复写代码。
+#     maximum = find_max(scores)
+#
+#     # min(列表) 是 Python 自带的函数，直接返回最小值。
+#     minimum = min(scores)
+#
+#     # sum(列表) 求总和，len(列表) 求个数，相除得平均值。/ 是除法，结果是小数。
+#     average = sum(scores) / len(scores)
+#
+#     # pass_count 是"及格人数"的计数器，从 0 开始。
+#     pass_count = 0
+#
+#     # 遍历每个成绩，> = 60 的就让计数器加 1。
+#     for score in scores:
+#         # >= 是"大于或等于"，60 分及以上算及格。
+#         if score >= 60:
+#             pass_count = pass_count + 1
+#
+#     # return 后面用逗号隔开多个值，Python 会把它们打包成一个"元组"一起返回。
+#     return maximum, minimum, average, pass_count
+#
+#
+# # --------------------------------------------------------------------
+# # 第四部分：函数 —— 读文本文件
+# # --------------------------------------------------------------------
+# # 参数 file_path 是要读的文件路径。
+# def read_text_file(file_path):
+#     # open(文件路径, 模式, encoding=...)：打开文件。"r" 表示只读（read）；encoding="utf-8" 指定文字编码，读写中文必须写对，否则会乱码。
+#     # with ... as file: 是"上下文管理"写法：代码块结束后，Python 会自动关闭文件，不用自己写 close()。
+#     with open(file_path, "r", encoding="utf-8") as file:
+#         # file.read() 一次读出文件的全部内容，返回一个字符串。
+#         content = file.read()
+#
+#     # 把读到的内容返回。注意 return 和 with 对齐（在 with 外面）：文件已经关闭了，内容还在 content 里。
+#     return content
+#
+#
+# # --------------------------------------------------------------------
+# # 第五部分：函数 —— 保存 JSON 文件
+# # --------------------------------------------------------------------
+# def save_students_to_json(students, file_path):
+#     # "w" 表示写入（write）：文件不存在就新建，已经存在就清空后重写（所以会覆盖原来的内容）。
+#     with open(file_path, "w", encoding="utf-8") as file:
+#         # json.dump(数据, 文件, ...)：把数据（列表、字典等）写进文件，格式是 JSON。
+#         # ensure_ascii=False：中文原样写入，不转成 \u 开头的编码；indent=4：每一层缩进 4 个空格，方便阅读。
+#         json.dump(students, file, ensure_ascii=False, indent=4)
+#
+#
+# # --------------------------------------------------------------------
+# # 第六部分：主程序 —— 依次完成题目 2、3、4
+# # --------------------------------------------------------------------
+# # 列表：用方括号括起来的一串数据。这是 6 个成绩。
+# scores = [78, 90, 45, 88, 92, 56]
+#
+# # 调用函数，一次用 4 个变量接收 4 个返回值（叫"解包"），按顺序一一对应。
+# maximum, minimum, average, pass_count = count_scores(scores)
+#
+# print("题目 2：成绩统计")
+#
+# # f"..." 叫 f-string（格式化字符串）：字符串前面加 f，里面的 {} 会被替换成变量的值。
+# print(f"最大值：{maximum}")
+#
+# print(f"最小值：{minimum}")
+#
+# # {average:.2f}：冒号后面是格式，.2f 表示"保留 2 位小数"。例：74.8333... 显示成 74.83。
+# print(f"平均值：{average:.2f}")
+#
+# print(f"及格人数：{pass_count}")
+#
+# # \n 表示换行。
+# print("\n题目 3：读取文本文件")
+#
+# # 调用函数，读出文本文件的内容。
+# text_content = read_text_file(TEXT_FILE)
+#
+# # 输出文件内容。文件末尾本来就有换行，print 又会加一个换行，所以后面会多出一个空行。
+# print(text_content)
+#
+# # 这是一个列表，里面放了 3 个字典。字典 {"键": 值, ...} 用"键: 值"成对保存一个学生的信息：姓名、年龄、成绩。
+# # 写成多行是为了好读；每一项后面多写一个逗号（叫"尾逗号"）是允许的，方便以后增删。
+# students = [
+#     {
+#         "姓名": "小明",
+#         "年龄": 18,
+#         "成绩": 92.5,
+#     },
+#     {
+#         "姓名": "小红",
+#         "年龄": 19,
+#         "成绩": 88.0,
+#     },
+#     {
+#         "姓名": "小刚",
+#         "年龄": 18,
+#         "成绩": 76.5,
+#     },
+# ]
+#
+# # 调用函数，把学生列表保存成 JSON 文件。
+# save_students_to_json(students, JSON_FILE)
+#
+# # 把保存的文件路径显示出来。
+# print(f"\n题目 4：学生信息已保存到 {JSON_FILE}")
+#
+# # ====================================================================
+# # 完整的预期输出（我在电脑上实际运行过，应该与下面完全一致）：
+# # （路径因电脑而异，<本文件所在文件夹> 指这个 .py 文件所在的文件夹）
+# #   题目 2：成绩统计
+# #   最大值：92
+# #   最小值：45
+# #   平均值：74.83
+# #   及格人数：4
+# #
+# #   题目 3：读取文本文件
+# #   张三 85
+# #   李四 92
+# #   王五 76
+# #   赵六 58
+# #
+# #
+# #   题目 4：学生信息已保存到 <本文件所在文件夹>/学生信息.json
+# # ====================================================================
