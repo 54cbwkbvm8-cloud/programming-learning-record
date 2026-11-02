@@ -8,9 +8,10 @@
 | --- | --- | --- |
 | Python 3 | 必需 | 运行仓库中的 Python 脚本 |
 | C 编译器 | 必需 | 编译 C17 程序，本机可用 `clang` |
+| JDK | Java 学习时必需 | 提供 `javac` 与 `java`，运行 Java 源码 |
 | 终端 | 必需 | 进入目录、运行程序、执行 Git |
 | Git | 必需 | 检查差异、提交和同步仓库 |
-| VS Code | 推荐 | 阅读代码、终端运行、调试 C/Python |
+| VS Code | 推荐 | 阅读代码、终端运行、调试 C/Python/Java |
 | NumPy、Matplotlib | 特定场景 | 运行 3D 莲花可视化项目 |
 
 ## macOS 环境检查
@@ -20,6 +21,8 @@
 ```bash
 python3 --version
 clang --version
+java -version
+javac -version
 git --version
 xcode-select -p
 ```
@@ -31,6 +34,8 @@ xcode-select -p
 ```text
 Python 3.14.7
 Apple clang 21.0.0
+openjdk version "21.0.13" 2026-10-20 LTS
+javac 21.0.13
 git version 2.54.0 (Apple Git-157)
 macOS 27.0.1
 ```
@@ -96,6 +101,74 @@ quit
 ```
 
 当前学习阶段优先使用编译警告、打印中间变量和边界输入定位问题。
+
+## 安装与使用 Java
+
+### 是否必需
+
+运行本仓库的 Java 练习必须有 JDK。JDK 同时包含编译器 `javac` 和运行器 `java`，只安装 JRE 不足以编译源码。
+
+当前电脑已经实际检测到 Temurin OpenJDK 21.0.13 LTS，因此不需要重复安装。其他电脑可从 [Eclipse Temurin](https://adoptium.net/temurin/releases/?os=mac) 选择 macOS 安装包，或者按课程要求安装兼容 JDK。
+
+验证：
+
+```bash
+java -version
+javac -version
+which java
+which javac
+```
+
+`java -version` 和 `javac -version` 两个版本最好一致。
+
+### 编译与运行 Java 程序
+
+在仓库根目录运行：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-practice.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -d "$java_dir" "Java/01_基础语法/hellojava.java"
+java -cp "$java_dir" hellojava
+```
+
+第二个程序：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-practice.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -d "$java_dir" "Java/01_基础语法/BasicTypes.java"
+java -cp "$java_dir" BasicTypes
+```
+
+参数说明：
+
+- `-encoding UTF-8`：源文件含中文，显式按 UTF-8 读取。
+- `-Xlint:all`：开启完整常用编译器提示。
+- `-d "$java_dir"`：把 `.class` 写到临时目录。
+- `-cp "$java_dir"`：让 Java 到同一临时目录查找类。
+- `java` 后面写类名，不写 `.java` 或 `.class` 后缀。
+
+### Java 文件名与类名
+
+如果源码声明 `public class BasicTypes`，文件名必须是 `BasicTypes.java`。文件名、类名和 `java` 启动时使用的类名都区分大小写。
+
+当前 `hellojava.java` 的类没有声明为 `public`，因此保留这个历史文件名仍能编译；运行时仍然写：
+
+```bash
+java -cp "$java_dir" hellojava
+```
+
+正式新写练习时，类名建议使用 `HelloJava` 这类大驼峰命名，文件相应叫 `HelloJava.java`。
+
+### 调试 Java 程序
+
+需要调试信息时在编译时添加 `-g`：
+
+```bash
+javac -g -encoding UTF-8 -Xlint:all -d "$java_dir" HelloJava.java
+jdb -classpath "$java_dir" HelloJava
+```
+
+初学阶段更建议先读编译器给出的文件名、行号、符号和错误信息，再用临时输出验证变量。不要因为程序“能运行”就跳过逻辑核对。
 
 ## 安装与使用 Python
 
@@ -179,12 +252,14 @@ code --version
 
 - Python：官方说明见 [Python in Visual Studio Code](https://code.visualstudio.com/docs/languages/python)。
 - C/C++：官方说明见 [C++ programming with Visual Studio Code](https://code.visualstudio.com/docs/languages/cpp)。
+- Java：可使用 Microsoft Java 扩展包，扩展 ID 为 `vscjava.vscode-java-pack`，其中包含语言支持和调试入口。
 
 扩展 ID：
 
 ```text
 ms-python.python
 ms-vscode.cpptools
+vscjava.vscode-java-pack
 ```
 
 命令行安装示例：
@@ -192,6 +267,7 @@ ms-vscode.cpptools
 ```bash
 code --install-extension ms-python.python
 code --install-extension ms-vscode.cpptools
+code --install-extension vscjava.vscode-java-pack
 ```
 
 不要求安装所有主题、格式化器或其他扩展。先保证代码显示、终端运行和调试可用。
@@ -259,6 +335,7 @@ GitHub 基础操作官方文档：[GitHub Hello World](https://docs.github.com/e
 ```bash
 python3 -m py_compile <修改过的 Python 文件>
 clang -std=c17 -Wall -Wextra -Wpedantic -fsyntax-only <修改过的 C 文件>
+javac -encoding UTF-8 -Xlint:all -d <临时目录> <修改过的 Java 文件>
 git status
 git diff --check
 git diff --cached --stat
@@ -296,7 +373,31 @@ cd "目录名"          # 目录名含空格时加引号
 
 ### 编译提示找不到文件
 
-先运行 `pwd` 确认当前目录，再检查路径中的中文、空格和引号。仓库根目录执行命令时，路径应以 `C/` 或 `Python/` 开头。
+先运行 `pwd` 确认当前目录，再检查路径中的中文、空格和引号。仓库根目录执行命令时，路径应以 `C/`、`Python/` 或 `Java/` 开头。
+
+### `javac` 提示类名与文件名不匹配
+
+检查是否出现 `public class Name`。public 类名必须和文件名大小写完全一致。例如 `BasicTypes` 不能随便改成带日期前缀的文件名；如需记录日期，写在配套 Markdown 文档和导航中。
+
+### `java` 提示找不到主类
+
+先确认 `javac -d` 和 `java -cp` 指向同一个临时目录，再确认启动时写的是类名。当前第一个程序应运行：
+
+```bash
+java -cp "$java_dir" hellojava
+```
+
+不是 `java hellojava.java`，也不是 `java HelloWord`。
+
+### Java 源码中的中文乱码或编译错误
+
+本仓库 Java 文件按 UTF-8 保存。编译时明确加入：
+
+```bash
+javac -encoding UTF-8 ...
+```
+
+不要在 Windows 与 macOS 间来回保存时混用不同编码。
 
 ### Python 找不到数据文件
 
@@ -313,6 +414,7 @@ cd "目录名"          # 目录名含空格时加引号
 ## 验证状态
 
 - 本文引用的 Python、VS Code、Git、GitHub 和 Apple 官方链接在 2026-10-19 检查返回 HTTP 200。
-- 当前机器的 `python3`、`clang` 和 `git` 命令已实际运行验证。
+- 当前机器的 `python3`、`clang`、`java`、`javac` 和 `git` 命令已实际运行验证。
 - 仓库中的 Python 文件已通过 `compileall`，C 文件已通过 C17 语法检查。
+- 本次新增的两份 Java 文件已使用 OpenJDK 21.0.13、UTF-8 和 `-Xlint:all` 编译，并实际运行。
 - VS Code 扩展安装命令和可视化依赖安装未在本文档更新时重新执行，使用前应根据本机状态验证。

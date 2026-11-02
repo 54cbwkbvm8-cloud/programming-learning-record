@@ -6,6 +6,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Java 编译产物
+*.class
+
 # 虚拟环境
 .venv/
 venv/
