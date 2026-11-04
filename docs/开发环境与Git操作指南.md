@@ -131,13 +131,24 @@ javac -encoding UTF-8 -Xlint:all -d "$java_dir" "Java/01_基础语法/hellojava.
 java -cp "$java_dir" hellojava
 ```
 
-第二个程序：
+运行基本类型程序：
 
 ```bash
 java_dir=$(mktemp -d /tmp/java-practice.XXXXXX)
 javac -encoding UTF-8 -Xlint:all -d "$java_dir" "Java/01_基础语法/BasicTypes.java"
 java -cp "$java_dir" BasicTypes
 ```
+
+运行带输入的分支程序：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-practice.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/02_分支与循环/GradeLevel.java"
+printf '90\n' | java -cp "$java_dir" GradeLevel
+```
+
+`printf '90\n'` 把 `90` 和换行送进标准输入，效果相当于手动输入后按回车。`SwitchBreakDemo.java` 故意展示漏写 `break` 的穿透，因此 `-Xlint:all` 会报告预期警告，加 `-Werror` 会失败；具体原因见 [同目录简介](../Java/02_分支与循环/04_2026-11-04_Java-switch与break穿透_简介与学习建议.md)。
 
 参数说明：
 
@@ -416,5 +427,6 @@ javac -encoding UTF-8 ...
 - 本文引用的 Python、VS Code、Git、GitHub 和 Apple 官方链接在 2026-10-19 检查返回 HTTP 200。
 - 当前机器的 `python3`、`clang`、`java`、`javac` 和 `git` 命令已实际运行验证。
 - 仓库中的 Python 文件已通过 `compileall`，C 文件已通过 C17 语法检查。
-- 本次新增的两份 Java 文件已使用 OpenJDK 21.0.13、UTF-8 和 `-Xlint:all` 编译，并实际运行。
+- 2026-11-02 新增的两份 Java 文件已使用 OpenJDK 21.0.13、UTF-8 和 `-Xlint:all` 编译，并实际运行。
+- 2026-11-04 新增的四份 Java 文件已使用同一环境检查；其余三份通过 `-Werror`，`SwitchBreakDemo.java` 按设计保留 11 条穿透警告并已实际运行。
 - VS Code 扩展安装命令和可视化依赖安装未在本文档更新时重新执行，使用前应根据本机状态验证。
