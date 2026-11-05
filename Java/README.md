@@ -7,9 +7,9 @@
 | 目录 | 源码数 | 学习重点 |
 | --- | --- | --- |
 | [01_基础语法](01_基础语法/) | 3 | 类、`main`、基本类型、类型转换、运算符、短路求值和三元表达式 |
-| [02_分支与循环](02_分支与循环/) | 3 | 输入校验、`if / else`、`switch`、`break`、穿透和边界值 |
+| [02_分支与循环](02_分支与循环/) | 10 | 输入校验、条件分支、`switch`、三种循环、嵌套循环、统计、极值和持续交互 |
 
-当前只创建了有真实源码的目录。Java 循环、方法与数组、面向对象、集合和异常仍没有足够练习，因此不提前建立空目录。
+当前只创建了有真实源码的目录。Java 方法与数组、面向对象、集合和异常仍没有足够练习，因此不提前建立空目录。
 
 ## 练习入口
 
@@ -24,8 +24,16 @@
 | 4A | [`SwitchBreakDemo.java`](02_分支与循环/SwitchBreakDemo.java) | [`04_2026-11-04_Java-switch与break穿透_零基础教程.md`](02_分支与循环/04_2026-11-04_Java-switch与break穿透_零基础教程.md) | 用执行路径理解先找入口、再走到出口 |
 | 5 | [`LeapYear.java`](02_分支与循环/LeapYear.java) | [`05_2026-11-04_Java闰年判断与输入校验_简介与学习建议.md`](02_分支与循环/05_2026-11-04_Java闰年判断与输入校验_简介与学习建议.md) | 练习 `Scanner`、整数校验、正数校验和闰年布尔表达式 |
 | 6 | [`GradeLevel.java`](02_分支与循环/GradeLevel.java) | [`06_2026-11-04_Java成绩等级与双分支写法_简介与学习建议.md`](02_分支与循环/06_2026-11-04_Java成绩等级与双分支写法_简介与学习建议.md) | 比较 `if / else if` 与 `switch (score / 10)` 的边界处理 |
+| 7 | [`LoopBasics.java`](02_分支与循环/LoopBasics.java) | [`07_2026-11-05_Java循环基础与break-continue_简介与学习建议.md`](02_分支与循环/07_2026-11-05_Java循环基础与break-continue_简介与学习建议.md) | 对比 `for`、`while`、`do-while`，观察 `break` 和 `continue` |
+| 7A | [`LoopBasics.java`](02_分支与循环/LoopBasics.java) | [`07_2026-11-05_Java循环基础与break-continue_零基础教程.md`](02_分支与循环/07_2026-11-05_Java循环基础与break-continue_零基础教程.md) | 用执行轨迹理解循环变量、最少执行次数和跳转 |
+| 8 | [`MultiplicationTable.java`](02_分支与循环/MultiplicationTable.java) | [`08_2026-11-05_Java嵌套循环与九九乘法表_简介与学习建议.md`](02_分支与循环/08_2026-11-05_Java嵌套循环与九九乘法表_简介与学习建议.md) | 用外层与内层循环控制行和列 |
+| 9 | [`StarTriangle.java`](02_分支与循环/StarTriangle.java) | [`09_2026-11-05_Java星号三角形与输入校验_简介与学习建议.md`](02_分支与循环/09_2026-11-05_Java星号三角形与输入校验_简介与学习建议.md) | 把输入校验与嵌套循环组合起来 |
+| 10 | [`Sum.java`](02_分支与循环/Sum.java) | [`10_2026-11-05_Java循环求和与输入累加_简介与学习建议.md`](02_分支与循环/10_2026-11-05_Java循环求和与输入累加_简介与学习建议.md) | 维护累加器，处理固定次数的有效输入 |
+| 11 | [`CountEven.java`](02_分支与循环/CountEven.java) | [`11_2026-11-05_Java偶数统计与取余边界_简介与学习建议.md`](02_分支与循环/11_2026-11-05_Java偶数统计与取余边界_简介与学习建议.md) | 用计数器统计满足条件的数，覆盖 0 和负数 |
+| 12 | [`MaxMin.java`](02_分支与循环/MaxMin.java) | [`12_2026-11-05_Java循环求最大值最小值_简介与学习建议.md`](02_分支与循环/12_2026-11-05_Java循环求最大值最小值_简介与学习建议.md) | 用首个有效数初始化并在一次遍历中维护极值 |
+| 13 | [`GuessNumber.java`](02_分支与循环/GuessNumber.java) | [`13_2026-11-05_Java猜数字与持续输入_简介与学习建议.md`](02_分支与循环/13_2026-11-05_Java猜数字与持续输入_简介与学习建议.md) | 用无限循环、随机范围和 `break` 完成持续交互 |
 
-建议按 1 → 2 → 3 → 4 → 5 → 6 的顺序学习。先运行程序，再阅读简介，卡住时再看零基础教程。`hellojava.java` 和 `BasicTypes.java` 后半部分保留了大量原附件注释，编译器会忽略这些注释。
+建议按 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 的顺序学习。先运行程序，再阅读简介，卡住时再看零基础教程。`hellojava.java`、`BasicTypes.java` 与本批 Java 文件后半部分都保留了大量原附件注释，编译器会忽略这些注释。
 
 ## Java 文件名规则
 
@@ -75,6 +83,24 @@ javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
 printf '90\n' | java -cp "$java_dir" GradeLevel
 ```
 
+运行不需要输入的循环基础程序：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-loop.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/02_分支与循环/LoopBasics.java"
+java -cp "$java_dir" LoopBasics
+```
+
+运行带输入重试的星号三角形：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-star.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/02_分支与循环/StarTriangle.java"
+printf 'abc\n0\n3\n' | java -cp "$java_dir" StarTriangle
+```
+
 `SwitchBreakDemo.java` 故意展示 11 处 `[fallthrough]`，使用 `-Xlint:all` 编译会看到这些预期警告；如果加 `-Werror`，编译会按设计失败。不要为了通过严格检查而删除原始反例，详见同目录说明。
 
 `javac` 编译源文件，`java` 启动指定类。`-d` 把编译结果放进临时目录，`-cp` 告诉 Java 去哪里查找编译后的类。完整环境说明见 [开发环境与 Git 操作指南](../docs/开发环境与Git操作指南.md)。
@@ -89,9 +115,14 @@ printf '90\n' | java -cp "$java_dir" GradeLevel
 6. 能区分 `&&` 与 `&`、`||` 与 `|`，并说明短路为什么能保护除以零的表达式。
 7. 能沿着 `case` 顺序追踪 `switch`，说明 `break` 和 `default` 的作用。
 8. 能写出闰年条件和成绩边界，测试 1900、2000、59、60、89、90、100、非法输入。
-9. 合上源码，自己写一个 `StudentInfo.java`，再写一个带输入校验的小型等级程序。
+9. 能说明 `while` 与 `do-while` 在首次条件为假时的执行次数差异。
+10. 能手工跟踪单层循环和外层、内层循环的变量变化。
+11. 能写出九九乘法表和带输入校验的星号三角形。
+12. 能在循环中维护累加器、计数器和当前最大值/最小值。
+13. 能说明随机猜数字程序的秘密数字、有效猜测次数和循环出口。
+14. 合上源码，自己写一个 `StudentInfo.java`、一个循环统计程序和一个带退出条件的小游戏。
 
-当前已经覆盖程序入口、基本类型、主要运算符、输入校验和条件分支。循环、方法与数组、面向对象、集合和异常还没有足够的独立练习，不把它们写成“已经掌握”的结论。
+当前已经覆盖程序入口、基本类型、主要运算符、输入校验、条件分支和循环基础。方法与数组、面向对象、集合和异常还没有足够的独立练习，不把它们写成“已经掌握”的结论。
 
 ## 维护规则
 

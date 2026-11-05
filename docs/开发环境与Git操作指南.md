@@ -148,6 +148,26 @@ javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
 printf '90\n' | java -cp "$java_dir" GradeLevel
 ```
 
+运行不需要输入的循环基础程序：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-loop.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/02_分支与循环/LoopBasics.java"
+java -cp "$java_dir" LoopBasics
+```
+
+运行带输入重试的循环程序：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-star.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/02_分支与循环/StarTriangle.java"
+printf 'abc\n0\n3\n' | java -cp "$java_dir" StarTriangle
+```
+
+上面的测试依次提供非整数 `abc`、非法范围 `0` 和合法行数 `3`，可以验证输入缓冲区清理与正数校验。学习循环时，先在纸上写出每一轮变量值，再用输入管道验证预期输出。
+
 `printf '90\n'` 把 `90` 和换行送进标准输入，效果相当于手动输入后按回车。`SwitchBreakDemo.java` 故意展示漏写 `break` 的穿透，因此 `-Xlint:all` 会报告预期警告，加 `-Werror` 会失败；具体原因见 [同目录简介](../Java/02_分支与循环/04_2026-11-04_Java-switch与break穿透_简介与学习建议.md)。
 
 参数说明：
