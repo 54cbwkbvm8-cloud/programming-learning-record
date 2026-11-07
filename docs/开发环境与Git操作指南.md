@@ -168,6 +168,17 @@ printf 'abc\n0\n3\n' | java -cp "$java_dir" StarTriangle
 
 上面的测试依次提供非整数 `abc`、非法范围 `0` 和合法行数 `3`，可以验证输入缓冲区清理与正数校验。学习循环时，先在纸上写出每一轮变量值，再用输入管道验证预期输出。
 
+运行方法与数组综合练习：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-array.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/03_方法与数组/ArrayAndBubbleSort.java"
+java -cp "$java_dir" ArrayAndBubbleSort
+```
+
+程序使用固定数据，不需要输入。先观察输出中的数组默认值、引用复制和排序过程，再查看末尾 18 条教学检查。`check()` 失败时只打印 `[失败]`，不会改变退出码，因此不能把退出码 0 单独当作所有检查通过的证据。
+
 `printf '90\n'` 把 `90` 和换行送进标准输入，效果相当于手动输入后按回车。`SwitchBreakDemo.java` 故意展示漏写 `break` 的穿透，因此 `-Xlint:all` 会报告预期警告，加 `-Werror` 会失败；具体原因见 [同目录简介](../Java/02_分支与循环/04_2026-11-04_Java-switch与break穿透_简介与学习建议.md)。
 
 参数说明：
@@ -449,4 +460,5 @@ javac -encoding UTF-8 ...
 - 仓库中的 Python 文件已通过 `compileall`，C 文件已通过 C17 语法检查。
 - 2026-11-02 新增的两份 Java 文件已使用 OpenJDK 21.0.13、UTF-8 和 `-Xlint:all` 编译，并实际运行。
 - 2026-11-04 新增的四份 Java 文件已使用同一环境检查；其余三份通过 `-Werror`，`SwitchBreakDemo.java` 按设计保留 11 条穿透警告并已实际运行。
+- 2026-11-07 新增的 `ArrayAndBubbleSort.java` 已在 OpenJDK 21.0.13 下通过 `-Xlint:all -Werror` 编译并运行，18 条教学检查全部显示通过。
 - VS Code 扩展安装命令和可视化依赖安装未在本文档更新时重新执行，使用前应根据本机状态验证。
