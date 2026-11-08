@@ -179,6 +179,21 @@ java -cp "$java_dir" ArrayAndBubbleSort
 
 程序使用固定数据，不需要输入。先观察输出中的数组默认值、引用复制和排序过程，再查看末尾 18 条教学检查。`check()` 失败时只打印 `[失败]`，不会改变退出码，因此不能把退出码 0 单独当作所有检查通过的证据。
 
+运行方法定义、重载和值传递练习：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-method.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/03_方法与数组/MethodBasic.java" \
+  "Java/03_方法与数组/MaxOverload.java" \
+  "Java/03_方法与数组/PassByValue.java"
+java -cp "$java_dir" MethodBasic
+java -cp "$java_dir" MaxOverload
+java -cp "$java_dir" PassByValue
+```
+
+`SecondLargest.java` 也通过了严格编译，但运行逻辑有已知错误。例如输入 `5 / 8 3 8 6 1` 当前输出 `NO`，题目预期是 `6`。编译成功只证明语法和静态检查通过，不代表算法结果正确；调试顺序见 [第二大不同值零基础教程](../Java/03_方法与数组/22_2026-11-08_Java第二大不同值_零基础教程.md)。
+
 `printf '90\n'` 把 `90` 和换行送进标准输入，效果相当于手动输入后按回车。`SwitchBreakDemo.java` 故意展示漏写 `break` 的穿透，因此 `-Xlint:all` 会报告预期警告，加 `-Werror` 会失败；具体原因见 [同目录简介](../Java/02_分支与循环/04_2026-11-04_Java-switch与break穿透_简介与学习建议.md)。
 
 参数说明：
@@ -461,4 +476,5 @@ javac -encoding UTF-8 ...
 - 2026-11-02 新增的两份 Java 文件已使用 OpenJDK 21.0.13、UTF-8 和 `-Xlint:all` 编译，并实际运行。
 - 2026-11-04 新增的四份 Java 文件已使用同一环境检查；其余三份通过 `-Werror`，`SwitchBreakDemo.java` 按设计保留 11 条穿透警告并已实际运行。
 - 2026-11-07 新增的 `ArrayAndBubbleSort.java` 已在 OpenJDK 21.0.13 下通过 `-Xlint:all -Werror` 编译并运行，18 条教学检查全部显示通过。
+- 2026-11-08 新增的九份 Java 文件全部通过 OpenJDK 21.0.13 的 `-Xlint:all -Werror` 编译，并完成代表性运行；源码字节与上传附件一致。`SecondLargest.java` 的运行错误已记录为教学案例，没有把编译通过误报为功能正确。
 - VS Code 扩展安装命令和可视化依赖安装未在本文档更新时重新执行，使用前应根据本机状态验证。
