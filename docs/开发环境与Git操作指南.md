@@ -490,4 +490,5 @@ javac -encoding UTF-8 ...
 - 2026-11-07 新增的 `ArrayAndBubbleSort.java` 已在 OpenJDK 21.0.13 下通过 `-Xlint:all -Werror` 编译并运行，18 条教学检查全部显示通过。
 - 2026-11-08 新增的九份 Java 文件全部通过 OpenJDK 21.0.13 的 `-Xlint:all -Werror` 编译，并完成代表性运行；源码字节与上传附件一致。`SecondLargest.java` 的运行错误已记录为教学案例，没有把编译通过误报为功能正确。
 - 2026-11-09 新增的 `GradeManager.java` 已使用同一 JDK 严格编译并运行；验证了正常流程、空名单、重复学号、非法成绩、并列最高分、降序排序、50 人容量上限和 EOF 退出。
+- 2026-11-11 新增的 47 号单链表练习已通过 C17 严格编译、ASan/UBSan、Clang Static Analyzer 和 macOS `leaks --atExit`；6 组删除分支输出符合预期，泄漏检查结果为 0 leaks。
 - VS Code 扩展安装命令和可视化依赖安装未在本文档更新时重新执行，使用前应根据本机状态验证。
