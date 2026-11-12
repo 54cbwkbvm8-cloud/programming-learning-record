@@ -206,6 +206,29 @@ printf '1\n1001\n张三\n88.5\n2\n1001\n3\n4\n5\n0\n' |
 
 该程序读取多轮菜单输入。自动化测试时可以用 `printf` 一次送入完整流程；如果输入提前用完，`exitIfNoInput()` 会打印退出提示并调用 `System.exit(0)`。这不同于正常选择 0 的菜单退出路径，但当前退出码同样是 0。
 
+运行类、对象、构造方法与引用练习：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-object.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/05_面向对象/Student.java" \
+  "Java/05_面向对象/StudentTest.java"
+java -cp "$java_dir" StudentTest
+```
+
+`StudentTest.java` 依赖 `Student.java`，两个文件必须一起编译。运行入口是带 `main` 的 `StudentTest`，不是 `Student`。
+
+运行封装、`this` 与 static 演示：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-encapsulation.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/05_面向对象/EncapsulationStaticDemo.java"
+java -cp "$java_dir" EncapsulationStaticDemo
+```
+
+这个文件还包含 `SafeStudent`、`OpenStudent`、`NoThisStudent` 和 `CounterWrong` 四个包级类。一个 `.java` 文件最多只能有一个 `public` 类，当前只有文件名相同的 `EncapsulationStaticDemo` 是公开类。
+
 `printf '90\n'` 把 `90` 和换行送进标准输入，效果相当于手动输入后按回车。`SwitchBreakDemo.java` 故意展示漏写 `break` 的穿透，因此 `-Xlint:all` 会报告预期警告，加 `-Werror` 会失败；具体原因见 [同目录简介](../Java/02_分支与循环/04_2026-11-04_Java-switch与break穿透_简介与学习建议.md)。
 
 参数说明：
@@ -491,4 +514,5 @@ javac -encoding UTF-8 ...
 - 2026-11-08 新增的九份 Java 文件全部通过 OpenJDK 21.0.13 的 `-Xlint:all -Werror` 编译，并完成代表性运行；源码字节与上传附件一致。`SecondLargest.java` 的运行错误已记录为教学案例，没有把编译通过误报为功能正确。
 - 2026-11-09 新增的 `GradeManager.java` 已使用同一 JDK 严格编译并运行；验证了正常流程、空名单、重复学号、非法成绩、并列最高分、降序排序、50 人容量上限和 EOF 退出。
 - 2026-11-11 新增的 47 号单链表练习已通过 C17 严格编译、ASan/UBSan、Clang Static Analyzer 和 macOS `leaks --atExit`；6 组删除分支输出符合预期，泄漏检查结果为 0 leaks。
+- 2026-11-12 新增的 `Student.java`、`StudentTest.java` 和 `EncapsulationStaticDemo.java` 已使用 OpenJDK 21.0.13 通过 `-Xlint:all -Werror`；`StudentTest` 输出 8 行，封装与 static 演示输出 20 行，结果符合预期。
 - VS Code 扩展安装命令和可视化依赖安装未在本文档更新时重新执行，使用前应根据本机状态验证。
