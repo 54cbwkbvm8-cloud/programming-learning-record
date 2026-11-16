@@ -251,6 +251,28 @@ java -cp "$java_dir" hellojava
 
 正式新写练习时，类名建议使用 `HelloJava` 这类大驼峰命名，文件相应叫 `HelloJava.java`。
 
+### 多个类与同名类
+
+一个程序可以拆成多个 `.java` 文件。编译时把需要的文件一起列出，例如：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-multi.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/06_Object方法与对象数组/Student.java" \
+  "Java/06_Object方法与对象数组/RawStudent.java" \
+  "Java/06_Object方法与对象数组/ToStringPredictDemo.java"
+java -cp "$java_dir" ToStringPredictDemo
+```
+
+只有被一起编译、且被程序引用的类才需要列出。`StudentArrayDemo` 只用 `Student`，不必把 `RawStudent` 也编进去。
+
+同一个编译范围不能出现两个全名相同的类。本仓库有两个 `Student.java`：
+
+- `Java/05_面向对象/Student.java`：学号、姓名、成绩；
+- `Java/06_Object方法与对象数组/Student.java`：姓名、成绩，并重写 `toString` / `equals` / `hashCode`。
+
+两组源码必须分目录、分次编译，不能在同一条 `javac` 命令里同时传入，也不要把它们编到同一个 `-d` 目录后混用。否则会报 `duplicate class: Student`，或者运行时加载到另一个版本。遇到这种错误时，先检查类名是否重复，而不是修改源码或删除文件。
+
 ### 调试 Java 程序
 
 需要调试信息时在编译时添加 `-g`：
@@ -515,4 +537,5 @@ javac -encoding UTF-8 ...
 - 2026-11-09 新增的 `GradeManager.java` 已使用同一 JDK 严格编译并运行；验证了正常流程、空名单、重复学号、非法成绩、并列最高分、降序排序、50 人容量上限和 EOF 退出。
 - 2026-11-11 新增的 47 号单链表练习已通过 C17 严格编译、ASan/UBSan、Clang Static Analyzer 和 macOS `leaks --atExit`；6 组删除分支输出符合预期，泄漏检查结果为 0 leaks。
 - 2026-11-12 新增的 `Student.java`、`StudentTest.java` 和 `EncapsulationStaticDemo.java` 已使用 OpenJDK 21.0.13 通过 `-Xlint:all -Werror`；`StudentTest` 输出 8 行，封装与 static 演示输出 20 行，结果符合预期。
+- 2026-11-16 新增的十一份 Java 文件已在 OpenJDK 11.0.32.1 下通过 `-Xlint:all -Werror` 编译（源码只使用 Java 8 兼容语法），并完成代表性运行：五份算法练习输出符合预期；`ToStringPredictDemo` 与 `EqualsDemo` 输出稳定；`NullPointerDemo` 按设计在末尾抛出 `NullPointerException`、退出码 1；`StudentArrayDemo` 验证了正常录入、非整数成绩重试和平均分 `87.50`。
 - VS Code 扩展安装命令和可视化依赖安装未在本文档更新时重新执行，使用前应根据本机状态验证。

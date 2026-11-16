@@ -8,11 +8,12 @@
 | --- | --- | --- |
 | [01_基础语法](01_基础语法/) | 3 | 类、`main`、基本类型、类型转换、运算符、短路求值和三元表达式 |
 | [02_分支与循环](02_分支与循环/) | 10 | 输入校验、条件分支、`switch`、三种循环、嵌套循环、统计、极值和持续交互 |
-| [03_方法与数组](03_方法与数组/) | 10 | 方法定义与重载、值传递与数组引用、数组遍历、素数/约数/数字拆位/第二大值/数对统计、冒泡排序、线性查找和二分查找 |
+| [03_方法与数组](03_方法与数组/) | 15 | 方法定义与重载、值传递与数组引用、数组遍历、字符串倒序、回文双指针、字母计数、GCD、素数/约数/数字拆位/第二大值/数对统计、冒泡排序、线性查找和二分查找 |
 | [04_综合项目](04_综合项目/) | 1 | 菜单循环、多方法分工、固定容量平行数组、输入校验、学号查找、统计和同步排序 |
 | [05_面向对象](05_面向对象/) | 3 | 类、对象、构造方法、引用、封装、私有字段、getter/setter、`this`、`static` 和对象传参 |
+| [06_Object方法与对象数组](06_Object方法与对象数组/) | 6 | `Object` 默认方法、`toString`、`equals`、`hashCode`、空指针异常、对象数组和对象录入 |
 
-当前只创建了有真实源码的目录。`03_方法与数组` 提供方法语义和入门算法，`04_综合项目` 组合菜单与数组，`05_面向对象` 第一次正式引入类对象、构造方法、引用别名、封装和静态成员。继承、多态、接口、集合、正式自动测试和工程构建仍没有足够资源，因此不提前建立空目录。
+当前只创建了有真实源码的目录。`03_方法与数组` 提供方法语义和入门算法，`04_综合项目` 组合菜单与数组，`05_面向对象` 第一次正式引入类对象、构造方法、引用别名、封装和静态成员，`06_Object方法与对象数组` 继续进入 `Object` 通用方法、内容比较和对象数组。继承、多态、接口、集合、正式自动测试和工程构建仍没有足够资源，因此不提前建立空目录。
 
 ## 练习入口
 
@@ -47,14 +48,24 @@
 | 22 | [`SecondLargest.java`](03_方法与数组/SecondLargest.java) | [`22_2026-11-08_Java第二大不同值_简介与学习建议.md`](03_方法与数组/22_2026-11-08_Java第二大不同值_简介与学习建议.md) | 识别读取范围和输出分支的真实逻辑错误 |
 | 22A | [`SecondLargest.java`](03_方法与数组/SecondLargest.java) | [`22_2026-11-08_Java第二大不同值_零基础教程.md`](03_方法与数组/22_2026-11-08_Java第二大不同值_零基础教程.md) | 从数组默认值、变量状态到最小修复逐步调试 |
 | 23 | [`PairCount.java`](03_方法与数组/PairCount.java) | [`23_2026-11-08_Java数对统计与暴力枚举_简介与学习建议.md`](03_方法与数组/23_2026-11-08_Java数对统计与暴力枚举_简介与学习建议.md) | 用双层循环统计不同下标数对 |
+| 27 | [`P01_StringReverse.java`](03_方法与数组/P01_StringReverse.java) | [`27_2026-11-16_Java字符串倒序与StringBuilder_简介与学习建议.md`](03_方法与数组/27_2026-11-16_Java字符串倒序与StringBuilder_简介与学习建议.md) | 用下标倒序遍历和 `StringBuilder` 完成字符串倒序 |
+| 28 | [`P02_Palindrome.java`](03_方法与数组/P02_Palindrome.java) | [`28_2026-11-16_Java回文判断与双指针_简介与学习建议.md`](03_方法与数组/28_2026-11-16_Java回文判断与双指针_简介与学习建议.md) | 用双指针逐对比较判断回文，处理空串和提前结束 |
+| 29 | [`P03_CountLetters.java`](03_方法与数组/P03_CountLetters.java) | [`29_2026-11-16_Java字母统计与数组计数_简介与学习建议.md`](03_方法与数组/29_2026-11-16_Java字母统计与数组计数_简介与学习建议.md) | 用 26 格计数数组和 `ch - 'a'` 映射统计字母 |
+| 30 | [`P04_GCD.java`](03_方法与数组/P04_GCD.java) | [`30_2026-11-16_Java最大公约数与辗转相除_简介与学习建议.md`](03_方法与数组/30_2026-11-16_Java最大公约数与辗转相除_简介与学习建议.md) | 用辗转相除法求 GCD，处理负数、0 和 `long` 输入 |
+| 31 | [`P05_IsPrime.java`](03_方法与数组/P05_IsPrime.java) | [`31_2026-11-16_Java质数判定与long试除边界_简介与学习建议.md`](03_方法与数组/31_2026-11-16_Java质数判定与long试除边界_简介与学习建议.md) | 用 `i <= n / i` 避免溢出，判断 `long` 范围的质数 |
 | 24 | [`GradeManager.java`](04_综合项目/GradeManager.java) | [`24_2026-11-09_Java成绩管理系统_简介与学习建议.md`](04_综合项目/24_2026-11-09_Java成绩管理系统_简介与学习建议.md) | 用菜单组合录入、查询、统计、排序和多层输入校验 |
 | 24A | [`GradeManager.java`](04_综合项目/GradeManager.java) | [`24_2026-11-09_Java成绩管理系统_零基础教程.md`](04_综合项目/24_2026-11-09_Java成绩管理系统_零基础教程.md) | 用数据模型、方法调用链和排序轨迹读懂完整项目 |
 | 25 | [`Student.java`](05_面向对象/Student.java)、[`StudentTest.java`](05_面向对象/StudentTest.java) | [`25_2026-11-12_Java类对象构造方法与引用_简介与学习建议.md`](05_面向对象/25_2026-11-12_Java类对象构造方法与引用_简介与学习建议.md) | 定义类、创建对象、比较构造方法并理解引用别名 |
 | 25A | 同上 | [`25_2026-11-12_Java类对象构造方法与引用_零基础教程.md`](05_面向对象/25_2026-11-12_Java类对象构造方法与引用_零基础教程.md) | 用内存关系理解 `new`、`this` 和对象比较 |
 | 26 | [`EncapsulationStaticDemo.java`](05_面向对象/EncapsulationStaticDemo.java) | [`26_2026-11-12_Java封装this与static_简介与学习建议.md`](05_面向对象/26_2026-11-12_Java封装this与static_简介与学习建议.md) | 对比无封装与私有字段、构造校验、静态计数和对象传参 |
 | 26A | [`EncapsulationStaticDemo.java`](05_面向对象/EncapsulationStaticDemo.java) | [`26_2026-11-12_Java封装this与static_零基础教程.md`](05_面向对象/26_2026-11-12_Java封装this与static_零基础教程.md) | 逐步理解 getter/setter、`this`、`static` 和引用副本 |
+| 32 | [`Student.java`](06_Object方法与对象数组/Student.java)、[`RawStudent.java`](06_Object方法与对象数组/RawStudent.java)、[`ToStringPredictDemo.java`](06_Object方法与对象数组/ToStringPredictDemo.java) | [`32_2026-11-16_Java-toString与对象打印_简介与学习建议.md`](06_Object方法与对象数组/32_2026-11-16_Java-toString与对象打印_简介与学习建议.md) | 对比默认与重写的 `toString`，理解 `println` 的自动调用 |
+| 33 | [`Student.java`](06_Object方法与对象数组/Student.java)、[`RawStudent.java`](06_Object方法与对象数组/RawStudent.java)、[`EqualsDemo.java`](06_Object方法与对象数组/EqualsDemo.java) | [`33_2026-11-16_Java-equals与hashCode重写_简介与学习建议.md`](06_Object方法与对象数组/33_2026-11-16_Java-equals与hashCode重写_简介与学习建议.md) | 区分 `==` 与 `equals`，按字段重写 `equals` 和 `hashCode` |
+| 33A | 同上 | [`33_2026-11-16_Java-equals与hashCode重写_零基础教程.md`](06_Object方法与对象数组/33_2026-11-16_Java-equals与hashCode重写_零基础教程.md) | 用引用图、字符串常量池和判断顺序逐步理解对象相等 |
+| 34 | [`NullPointerDemo.java`](06_Object方法与对象数组/NullPointerDemo.java)、[`Student.java`](06_Object方法与对象数组/Student.java) | [`34_2026-11-16_Java空指针与对象数组判空_简介与学习建议.md`](06_Object方法与对象数组/34_2026-11-16_Java空指针与对象数组判空_简介与学习建议.md) | 观察对象数组默认 `null`、NPE 和判空保护 |
+| 35 | [`StudentArrayDemo.java`](06_Object方法与对象数组/StudentArrayDemo.java)、[`Student.java`](06_Object方法与对象数组/Student.java) | [`35_2026-11-16_Java对象数组录入与平均分_简介与学习建议.md`](06_Object方法与对象数组/35_2026-11-16_Java对象数组录入与平均分_简介与学习建议.md) | 录入对象数组、校验整数成绩并计算平均分 |
 
-建议先按 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 打好基础，再按 15 → 16 → 17 → 18 → 19 → 20 → 21 → 22 → 23 学习方法语义和入门算法，完成 24 号综合项目后进入 25 → 26 的面向对象阶段。先运行程序，再阅读简介，卡住时再看零基础教程。`Student`、`StudentTest` 和 `EncapsulationStaticDemo` 也保留了大量原附件注释，编译器会忽略这些注释。
+建议先按 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 打好基础，再按 15 → 16 → 17 → 18 → 19 → 20 → 21 → 22 → 23 学习方法语义和入门算法。23 号之后用 27 → 28 → 29 → 30 → 31 补一组字符串与数论练习（这五题是后补编号，学习位置仍在综合项目之前），完成 24 号综合项目后进入 25 → 26 的面向对象阶段，最后按 32 → 33 → 34 → 35 学习 `Object` 通用方法、对象比较和对象数组。先运行程序，再阅读简介，卡住时再看零基础教程。`Student`、`StudentTest`、`EncapsulationStaticDemo` 和新一批源码保留了大量原附件注释，编译器会忽略这些注释。
 
 ## Java 文件名规则
 
@@ -153,7 +164,26 @@ javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
 printf '100 0\n' | java -cp "$java_dir" DigitCount
 ```
 
-每份源码的完整命令和真实输出见同目录 15～23 号说明。`SecondLargest.java` 当前保留逻辑错误，编译能通过，但典型输入会输出 `NO`；不要把它当作正确标准答案。
+运行本批字符串、字母统计与数论练习：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-algorithm2.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/03_方法与数组/P01_StringReverse.java" \
+  "Java/03_方法与数组/P02_Palindrome.java" \
+  "Java/03_方法与数组/P03_CountLetters.java" \
+  "Java/03_方法与数组/P04_GCD.java" \
+  "Java/03_方法与数组/P05_IsPrime.java"
+printf 'hello\n' | java -cp "$java_dir" P01_StringReverse
+printf 'level\n' | java -cp "$java_dir" P02_Palindrome
+printf 'Hello, World! 123\n' | java -cp "$java_dir" P03_CountLetters
+printf '12 18\n' | java -cp "$java_dir" P04_GCD
+printf '97\n' | java -cp "$java_dir" P05_IsPrime
+```
+
+预期依次输出 `olleh`、`YES`、`10` 及 7 行字母明细、`6`、`Yes`。源码类名保留了原附件的 `P01`～`P05` 前缀，所以 `java` 后面必须写完整类名。
+
+每份源码的完整命令和真实输出见同目录 15～23、27～31 号说明。`SecondLargest.java` 当前保留逻辑错误，编译能通过，但典型输入会输出 `NO`；不要把它当作正确标准答案。
 
 运行成绩管理系统：
 
@@ -185,6 +215,24 @@ javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
   "Java/05_面向对象/EncapsulationStaticDemo.java"
 java -cp "$java_dir" EncapsulationStaticDemo
 ```
+
+运行 `Object` 通用方法与对象数组练习：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-objectmethods.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/06_Object方法与对象数组/Student.java" \
+  "Java/06_Object方法与对象数组/RawStudent.java" \
+  "Java/06_Object方法与对象数组/ToStringPredictDemo.java" \
+  "Java/06_Object方法与对象数组/EqualsDemo.java" \
+  "Java/06_Object方法与对象数组/NullPointerDemo.java" \
+  "Java/06_Object方法与对象数组/StudentArrayDemo.java"
+java -cp "$java_dir" ToStringPredictDemo
+java -cp "$java_dir" EqualsDemo
+printf 'Tom 90\nAmy 85\n' | java -cp "$java_dir" StudentArrayDemo
+```
+
+`NullPointerDemo` 会在最后故意抛出 `NullPointerException`，退出码为 1；这是教学结果，不是编译或运行环境故障。`Java/06_Object方法与对象数组/Student.java` 与 `Java/05_面向对象/Student.java` 同名但内容不同，必须分开目录编译，不能把两组源码放进同一个输出目录。
 
 `StudentTest` 必须和 `Student` 一起编译。`EncapsulationStaticDemo.java` 内部还有 `SafeStudent` 等包级类，只有 `EncapsulationStaticDemo` 是 `public`，因此运行类名仍是 `EncapsulationStaticDemo`。
 
@@ -222,14 +270,22 @@ java -cp "$java_dir" EncapsulationStaticDemo
 26. 能区分实例字段与 `static` 字段、实例方法与 `static` 方法。
 27. 能判断对象传参时“修改共同对象”和“重新赋值形参”的不同结果。
 28. 合上源码，自己写一个数组求和与冒泡排序程序，再写一个带退出条件的小游戏。
+29. 能说明 `String` 不可变与 `StringBuilder` 的分工，独立写出字符串倒序。
+30. 能用双指针判断回文，解释空串、大小写和空格的处理规则。
+31. 能用 26 格数组统计字母，解释 `ch - 'a'` 和 `(char)` 转换。
+32. 能手工执行辗转相除，说明负数取绝对值和两个数都是 0 时的约定。
+33. 能解释 `i <= n / i` 为什么比 `i * i <= n` 更安全，并用 `long` 判断大数质数。
+34. 能说明默认 `toString` 与重写后的区别，解释 `println(对象)` 和字符串拼接的自动调用。
+35. 能按四步重写 `equals`，并说明为什么必须同时重写 `hashCode`。
+36. 能解释对象数组默认值是 `null`、什么操作会触发 NPE，并完成对象数组的录入与平均分。
 
-当前已经覆盖程序入口、基本类型、主要运算符、输入校验、条件分支、循环、方法拆分与重载、值传递、数组引用、多种入门算法、成绩管理项目，以及类对象、构造方法、封装、`this`、`static` 和对象引用传参。这个阶段提供面向对象入口，不代表已经掌握继承、多态、接口、集合或文件持久化。
+当前已经覆盖程序入口、基本类型、主要运算符、输入校验、条件分支、循环、方法拆分与重载、值传递、数组引用、多种入门算法、字符串倒序与回文、字母统计、GCD、`long` 质数判定、成绩管理项目，以及类对象、构造方法、封装、`this`、`static`、对象引用传参、`Object` 通用方法、`equals` / `hashCode`、空指针和对象数组。这个阶段提供面向对象与对象数组入口，不代表已经掌握继承、多态、接口、集合或文件持久化。
 
 ## 维护规则
 
 新增 Java 练习时：
 
-1. 根据主要学习目标建立或选择二级目录。当前已有 `01_基础语法`、`02_分支与循环`、`03_方法与数组`、`04_综合项目` 和 `05_面向对象`；后续继承、多态等目录等真实练习出现后再新增。
+1. 根据主要学习目标建立或选择二级目录。当前已有 `01_基础语法`、`02_分支与循环`、`03_方法与数组`、`04_综合项目`、`05_面向对象` 和 `06_Object方法与对象数组`；后续继承、多态等目录等真实练习出现后再新增。
 2. 源码文件名遵守 `public` 类的文件名要求。
 3. 在源码旁增加带序号和日期的 `_简介与学习建议.md`；内容复杂时再增加 `_零基础教程.md`。
 4. 编译时使用 UTF-8，并把 `.class` 输出到临时目录。
