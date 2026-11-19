@@ -206,6 +206,29 @@ printf '1\n1001\n张三\n88.5\n2\n1001\n3\n4\n5\n0\n' |
 
 该程序读取多轮菜单输入。自动化测试时可以用 `printf` 一次送入完整流程；如果输入提前用完，`exitIfNoInput()` 会打印退出提示并调用 `System.exit(0)`。这不同于正常选择 0 的菜单退出路径，但当前退出码同样是 0。
 
+运行面向对象重构版成绩管理系统：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-sms.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/04_综合项目/StudentManagementSystem.java"
+printf '3\n1\n1001\n张三\n88\n3\n4\n5\n0\n' |
+  java -cp "$java_dir" StudentManagementSystem
+```
+
+该文件内部定义了包级的 `Student` 和 `StudentManager`，必须单独编译，不能和 05、06 的 `Student.java` 放进同一次 `javac` 调用。它没有 `hasNext()` 保护，输入提前结束时会在 `scanner.nextLine()` 处抛出 `NoSuchElementException`。
+
+运行数组实现的栈与括号匹配：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-stack.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/07_数据结构/StackDemo.java"
+java -cp "$java_dir" StackDemo
+```
+
+程序不需要输入，正常输出以 `共 13 项测试，通过 13 项` 结束。
+
 运行类、对象、构造方法与引用练习：
 
 ```bash
@@ -266,12 +289,13 @@ java -cp "$java_dir" ToStringPredictDemo
 
 只有被一起编译、且被程序引用的类才需要列出。`StudentArrayDemo` 只用 `Student`，不必把 `RawStudent` 也编进去。
 
-同一个编译范围不能出现两个全名相同的类。本仓库有两个 `Student.java`：
+同一个编译范围不能出现两个全名相同的类。本仓库有三处 `Student` 定义：
 
 - `Java/05_面向对象/Student.java`：学号、姓名、成绩；
-- `Java/06_Object方法与对象数组/Student.java`：姓名、成绩，并重写 `toString` / `equals` / `hashCode`。
+- `Java/06_Object方法与对象数组/Student.java`：姓名、成绩，并重写 `toString` / `equals` / `hashCode`；
+- `Java/04_综合项目/StudentManagementSystem.java` 内部的包级 `Student`：学号、姓名、整数成绩，并保护成绩范围。
 
-两组源码必须分目录、分次编译，不能在同一条 `javac` 命令里同时传入，也不要把它们编到同一个 `-d` 目录后混用。否则会报 `duplicate class: Student`，或者运行时加载到另一个版本。遇到这种错误时，先检查类名是否重复，而不是修改源码或删除文件。
+三组源码必须分别编译，不能在同一条 `javac` 命令里同时传入，也不要把它们编到同一个 `-d` 目录后混用。否则会报 `duplicate class: Student`，或者运行时加载到另一个版本。遇到这种错误时，先检查类名是否重复，而不是修改源码或删除文件。
 
 ### 调试 Java 程序
 
