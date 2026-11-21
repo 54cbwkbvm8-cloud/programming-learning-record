@@ -192,7 +192,7 @@ java -cp "$java_dir" MaxOverload
 java -cp "$java_dir" PassByValue
 ```
 
-`SecondLargest.java` 也通过了严格编译，但运行逻辑有已知错误。例如输入 `5 / 8 3 8 6 1` 当前输出 `NO`，题目预期是 `6`。编译成功只证明语法和静态检查通过，不代表算法结果正确；调试顺序见 [第二大不同值零基础教程](../Java/03_方法与数组/22_2026-11-08_Java第二大不同值_零基础教程.md)。
+`SecondLargest.java` 的早期版本存在读取漏下标 0 和输出分支写反的问题，当前版本已于 2026-11-16 修正；输入 `5 / 8 3 8 6 1` 应输出 `6`。编译成功只证明语法和静态检查通过，不代表算法结果正确；历史调试顺序见 [第二大不同值零基础教程](../Java/03_方法与数组/22_2026-11-08_Java第二大不同值_零基础教程.md)。
 
 运行菜单式成绩管理系统：
 
@@ -252,6 +252,24 @@ java -cp "$java_dir" EncapsulationStaticDemo
 
 这个文件还包含 `SafeStudent`、`OpenStudent`、`NoThisStudent` 和 `CounterWrong` 四个包级类。一个 `.java` 文件最多只能有一个 `public` 类，当前只有文件名相同的 `EncapsulationStaticDemo` 是公开类。
 
+运行继承与多态练习时，每个子目录使用独立临时输出目录：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-inheritance.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/08_继承与多态/01_继承与重写演示/InheritanceDemo.java"
+java -cp "$java_dir" InheritanceDemo
+
+java_dir=$(mktemp -d /tmp/java-polymorphism.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/08_继承与多态/02_多态与类型转换/PolymorphismDemo.java" \
+  "Java/08_继承与多态/02_多态与类型转换/CastErrorDemo.java"
+java -cp "$java_dir" PolymorphismDemo
+java -cp "$java_dir" CastErrorDemo
+```
+
+`CastErrorDemo` 按设计在第 7 行抛出 `ClassCastException`，退出码 1。40、41 号没有 `main`，只编译对应目录中的源文件；完整命令见各自简介，不宣称已经运行。
+
 `printf '90\n'` 把 `90` 和换行送进标准输入，效果相当于手动输入后按回车。`SwitchBreakDemo.java` 故意展示漏写 `break` 的穿透，因此 `-Xlint:all` 会报告预期警告，加 `-Werror` 会失败；具体原因见 [同目录简介](../Java/02_分支与循环/04_2026-11-04_Java-switch与break穿透_简介与学习建议.md)。
 
 参数说明：
@@ -289,13 +307,14 @@ java -cp "$java_dir" ToStringPredictDemo
 
 只有被一起编译、且被程序引用的类才需要列出。`StudentArrayDemo` 只用 `Student`，不必把 `RawStudent` 也编进去。
 
-同一个编译范围不能出现两个全名相同的类。本仓库有三处 `Student` 定义：
+同一个编译范围不能出现两个全名相同的类。本仓库已有多处 `Student` 定义：
 
 - `Java/05_面向对象/Student.java`：学号、姓名、成绩；
 - `Java/06_Object方法与对象数组/Student.java`：姓名、成绩，并重写 `toString` / `equals` / `hashCode`；
-- `Java/04_综合项目/StudentManagementSystem.java` 内部的包级 `Student`：学号、姓名、整数成绩，并保护成绩范围。
+- `Java/04_综合项目/StudentManagementSystem.java` 内部的包级 `Student`：学号、姓名、整数成绩，并保护成绩范围；
+- `Java/08_继承与多态/` 的四个子目录还分别包含独立的 `Person`、`Student` 或 `Teacher` 定义。
 
-三组源码必须分别编译，不能在同一条 `javac` 命令里同时传入，也不要把它们编到同一个 `-d` 目录后混用。否则会报 `duplicate class: Student`，或者运行时加载到另一个版本。遇到这种错误时，先检查类名是否重复，而不是修改源码或删除文件。
+各组源码必须分别编译，不能在同一条 `javac` 命令里同时传入，也不要把它们编到同一个 `-d` 目录后混用。否则会报 `duplicate class: Student`，或者运行时加载到另一个版本。遇到这种错误时，先检查类名是否重复，而不是修改源码或删除文件。
 
 ### 调试 Java 程序
 
@@ -562,4 +581,5 @@ javac -encoding UTF-8 ...
 - 2026-11-11 新增的 47 号单链表练习已通过 C17 严格编译、ASan/UBSan、Clang Static Analyzer 和 macOS `leaks --atExit`；6 组删除分支输出符合预期，泄漏检查结果为 0 leaks。
 - 2026-11-12 新增的 `Student.java`、`StudentTest.java` 和 `EncapsulationStaticDemo.java` 已使用 OpenJDK 21.0.13 通过 `-Xlint:all -Werror`；`StudentTest` 输出 8 行，封装与 static 演示输出 20 行，结果符合预期。
 - 2026-11-16 新增的十一份 Java 文件已在 OpenJDK 11.0.32.1 下通过 `-Xlint:all -Werror` 编译（源码只使用 Java 8 兼容语法），并完成代表性运行：五份算法练习输出符合预期；`ToStringPredictDemo` 与 `EqualsDemo` 输出稳定；`NullPointerDemo` 按设计在末尾抛出 `NullPointerException`、退出码 1；`StudentArrayDemo` 验证了正常录入、非整数成绩重试和平均分 `87.50`。
+- 2026-11-21 新增的八份 Java 继承与多态源码已在 OpenJDK 21.0.13 下分组通过 `-Xlint:all -Werror` 编译。38 号和 `PolymorphismDemo` 已实际正常运行；`CastErrorDemo` 按设计抛出 `ClassCastException`、退出码 1；40、41 号没有 `main`，未宣称运行验证。
 - VS Code 扩展安装命令和可视化依赖安装未在本文档更新时重新执行，使用前应根据本机状态验证。
