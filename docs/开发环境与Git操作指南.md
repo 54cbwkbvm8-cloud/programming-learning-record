@@ -296,6 +296,55 @@ printf '1\n张三\n20\n1\n2026001\n2\n张三\n4\n0\n' |
 
 `Java/09_算法练习/P5_Frequency.java`（原始版）按附件原样保存，**当前无法编译**：第 14 行循环初始化丢失 `0;`、第 20 行 `for` 误写为 `f`。编译它得到的两条报错本身就是 46 号的学习内容；修正版 `P5_FrequencyFixed.java` 只修复这两处并已通过 `-Werror` 严格编译。`CampusManager.java` 内含包级 `Person`、`Student`、`Teacher`，必须单独编译。
 
+运行循环队列、常用类与异常、集合版校园管理：
+
+```bash
+java_dir=$(mktemp -d /tmp/java-queue.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/07_数据结构/MyQueue.java"
+java -cp "$java_dir" MyQueue
+
+java_dir=$(mktemp -d /tmp/java-core.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/10_常用类与异常/StringLesson.java" \
+  "Java/10_常用类与异常/BuilderLesson.java" \
+  "Java/10_常用类与异常/CommonClasses.java" \
+  "Java/10_常用类与异常/ExceptionDemo.java"
+printf 'Hello World 123!\n' | java -cp "$java_dir" StringLesson
+printf '42\n' | java -cp "$java_dir" BuilderLesson
+java -cp "$java_dir" CommonClasses
+java -cp "$java_dir" ExceptionDemo
+java -DcrashMode=1 -cp "$java_dir" ExceptionDemo
+
+java_dir=$(mktemp -d /tmp/java-campus2.XXXXXX)
+javac -encoding UTF-8 -Xlint:all -Werror -d "$java_dir" \
+  "Java/04_综合项目/CampusPersonManager.java"
+printf '1\n张三\n20\n2\n张三\n0\n' | java -cp "$java_dir" CampusPersonManager
+```
+
+系统属性开关必须写在类名之前：`java -DcrashMode=1 -cp ... ExceptionDemo` 会故意抛出未捕获异常、退出码 1；写成类名之后则被当作程序参数，`crashMode` 仍为 0。`CommonClasses` 的随机数、随机姓名、日期差与时间戳每次都不同，核对输出时只看稳定部分。
+
+运行 C 链式栈并检查内存：
+
+```bash
+clang -std=c17 -Wall -Wextra -Wpedantic -g \
+  "C/12_数据结构/49_2026-11-27_链式栈实现与边界测试.c" \
+  -o /tmp/linked_stack
+/tmp/linked_stack
+
+# 内存检查一：ASan/UBSan（macOS 上必须关闭 detect_leaks）
+clang -std=c17 -Wall -Wextra -Wpedantic -g \
+  -fsanitize=address,undefined -fno-omit-frame-pointer \
+  "C/12_数据结构/49_2026-11-27_链式栈实现与边界测试.c" \
+  -o /tmp/linked_stack_san
+ASAN_OPTIONS=detect_leaks=0 /tmp/linked_stack_san
+
+# 内存检查二：普通构建 + leaks
+leaks --atExit -- /tmp/linked_stack
+```
+
+macOS 的 AddressSanitizer **不支持** `detect_leaks=1`，设置该选项会在程序启动前直接中止（退出码 134）并提示 `detect_leaks is not supported on this platform`。泄漏检查应使用普通构建配合 `leaks --atExit`；ASan 也不能与 `leaks` 同时使用（ASan 替换了内存分配器）。
+
 `printf '90\n'` 把 `90` 和换行送进标准输入，效果相当于手动输入后按回车。`SwitchBreakDemo.java` 故意展示漏写 `break` 的穿透，因此 `-Xlint:all` 会报告预期警告，加 `-Werror` 会失败；具体原因见 [同目录简介](../Java/02_分支与循环/04_2026-11-04_Java-switch与break穿透_简介与学习建议.md)。
 
 参数说明：
@@ -610,4 +659,5 @@ javac -encoding UTF-8 ...
 - 2026-11-16 新增的十一份 Java 文件已在 OpenJDK 11.0.32.1 下通过 `-Xlint:all -Werror` 编译（源码只使用 Java 8 兼容语法），并完成代表性运行：五份算法练习输出符合预期；`ToStringPredictDemo` 与 `EqualsDemo` 输出稳定；`NullPointerDemo` 按设计在末尾抛出 `NullPointerException`、退出码 1；`StudentArrayDemo` 验证了正常录入、非整数成绩重试和平均分 `87.50`。
 - 2026-11-21 新增的八份 Java 继承与多态源码已在 OpenJDK 21.0.13 下分组通过 `-Xlint:all -Werror` 编译。38 号和 `PolymorphismDemo` 已实际正常运行；`CastErrorDemo` 按设计抛出 `ClassCastException`、退出码 1；40、41 号没有 `main`，未宣称运行验证。
 - 2026-11-21 新增的第二批 Java 源码（42～48 号共九份，含修正版）已在 OpenJDK 21.0.13 下分组通过 `-Xlint:all -Werror` 编译：P1～P4、`P5_FrequencyFixed`、`AbstractAndInterface` 均已实际运行，输出与简介记录一致；`P5_Frequency.java`（原始版）按预期编译失败并保留报错记录；`CampusManager` 完成综合运行测试（重名查找、按年龄排序、多态显示、非法菜单/年龄/类型、容量上限、EOF 退出），源码字节与上传附件一致。
+- 2026-11-27 新增的八份 Java（49～56 号）与一份 C（C/12 的 49 号）已全部严格编译（Java 用 `-Xlint:all -Werror`，C 用 `-std=c17 -Wall -Wextra -Wpedantic`）。`MyQueue`、`StringLesson`、`BuilderLesson`、`CommonClasses`、`StringAlgorithms`、`TextAnalyzer`、`ExceptionDemo`（含 `-DcrashMode=1/2/3` 三种崩溃模式与未知模式 9）、`CampusPersonManager`（含非法输入、空列表、EOF）均已实际运行；C 链式栈 16/16 项通过，ASan/UBSan 无输出，`leaks` 结果为 `0 leaks for 0 total leaked bytes`。源码字节与上传附件一致。
 - VS Code 扩展安装命令和可视化依赖安装未在本文档更新时重新执行，使用前应根据本机状态验证。
